@@ -1,34 +1,30 @@
 import { useCallback, useEffect, useState } from "react";
-import { productsRepository } from "../services/products.repository";
+import { api } from "@/services/api/client";
 import type { Product } from "../types/product.types";
-import { useAppStore } from "@/store/app-store";
 
-export function useProducts(storeId: string) {
+export function useAllProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const resetProductFilters = useAppStore((state) => state.resetProductFilters);
 
   const fetchProducts = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const data = await productsRepository.listByStore(storeId);
-      setProducts(Array.isArray(data) ? data : []);
+      const response = await api.get<{ products?: Product[] }>("/products");
+      setProducts(Array.isArray(response?.products) ? response.products : []);
     } catch {
       setProducts([]);
-      setError("Erro ao carregar produtos.");
+      setError("Não foi possível carregar os produtos.");
     } finally {
       setIsLoading(false);
     }
-  }, [storeId]);
+  }, []);
 
   useEffect(() => {
-    resetProductFilters();
     fetchProducts();
-  }, [fetchProducts, resetProductFilters]);
+  }, [fetchProducts]);
 
   return {
     products,

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { storesRepository } from "../services/stores.repository";
 import type { Store } from "../types/store.types";
 
@@ -13,8 +13,9 @@ export function useStores() {
       setError(null);
 
       const data = await storesRepository.list();
-      setStores(data);
+      setStores(Array.isArray(data) ? data : []);
     } catch {
+      setStores([]);
       setError("Não foi possível carregar as lojas.");
     } finally {
       setIsLoading(false);
