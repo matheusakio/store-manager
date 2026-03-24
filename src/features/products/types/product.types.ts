@@ -18,7 +18,7 @@ export type Product = {
   name: string;
   category: ProductCategory;
   price: number;
-  imageUrl?: string | undefined;
+  imageUri?: string | undefined;
   createdAt: string;
 };
 
@@ -27,12 +27,12 @@ export type CreateProductInput = {
   name: string;
   category: ProductCategory;
   price: number;
-  imageUrl?: string | undefined;
+  imageUri?: string | undefined;
 };
 
 export type UpdateProductInput = {
   name: string;
   category: ProductCategory;
   price: number;
-  imageUrl?: string | undefined;
+  imageUri?: string | undefined;
 };

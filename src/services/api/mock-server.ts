@@ -1,5 +1,22 @@
 import { createServer, Model, Response } from "miragejs";
 
+type StoreRecord = {
+  id: string;
+  name: string;
+  address: string;
+  createdAt: string;
+};
+
+type ProductRecord = {
+  id: string;
+  storeId: string;
+  name: string;
+  category: string;
+  price: number;
+  imageUri?: string | undefined;
+  createdAt: string;
+};
+
 export function makeServer() {
   return createServer({
     models: {
@@ -8,23 +25,23 @@ export function makeServer() {
     },
 
     seeds(server) {
-      const store1 = server.create("store", {
+      server.create("store", {
         id: "1",
         name: "Loja Centro",
         address: "Centro - São Paulo",
         createdAt: new Date().toISOString(),
       });
 
-      const store2 = server.create("store", {
+      server.create("store", {
         id: "2",
         name: "Loja Shopping",
-        address: "Shopping Norte",
+        address: "Shopping Norte - São Paulo",
         createdAt: new Date().toISOString(),
       });
 
       server.create("product", {
         id: "1",
-        storeId: store1.id,
+        storeId: "1",
         name: "Camiseta Premium",
         category: "Roupas",
         price: 129.9,
@@ -33,7 +50,7 @@ export function makeServer() {
 
       server.create("product", {
         id: "2",
-        storeId: store1.id,
+        storeId: "1",
         name: "Fone Bluetooth",
         category: "Eletrônicos",
         price: 299.9,
@@ -44,68 +61,134 @@ export function makeServer() {
     routes() {
       this.namespace = "api";
 
-      // STORES
-
       this.get("/stores", (schema) => {
-        return schema.all("store");
+        const stores = schema
+          .all("store")
+          .models.map((model) => model.attrs as StoreRecord);
+
+        return { stores };
       });
 
       this.post("/stores", (schema, request) => {
-        const attrs = JSON.parse(request.requestBody);
+        const attrs = JSON.parse(request.requestBody) as Omit<
+          StoreRecord,
+          "id" | "createdAt"
+        >;
 
-        return schema.create("store", {
+        const store = schema.create("store", {
+          id: crypto.randomUUID(),
           ...attrs,
           createdAt: new Date().toISOString(),
         });
+
+        return store.attrs;
       });
 
       this.put("/stores/:id", (schema, request) => {
         const id = request.params.id;
-        const attrs = JSON.parse(request.requestBody);
 
+        if (!id) {
+          return new Response(400, {}, { message: "ID da loja inválido." });
+        }
+
+        const attrs = JSON.parse(request.requestBody) as Partial<StoreRecord>;
         const store = schema.find("store", id);
 
-        return store?.update(attrs);
+        if (!store) {
+          return new Response(404, {}, { message: "Loja não encontrada." });
+        }
+
+        store.update(attrs);
+        return store.attrs;
       });
 
       this.delete("/stores/:id", (schema, request) => {
         const id = request.params.id;
-        return schema.find("store", id)?.destroy();
-      });
 
-      // PRODUCTS
+        if (!id) {
+          return new Response(400, {}, { message: "ID da loja inválido." });
+        }
+
+        const store = schema.find("store", id);
+
+        if (!store) {
+          return new Response(404, {}, { message: "Loja não encontrada." });
+        }
+
+        const relatedProducts = schema
+          .all("product")
+          .models.filter(
+            (model) => (model.attrs as ProductRecord).storeId === id,
+          );
+
+        relatedProducts.forEach((product) => product.destroy());
+        store.destroy();
+
+        return new Response(204);
+      });
 
       this.get("/products", (schema, request) => {
         const storeId = request.queryParams.storeId;
 
-        if (storeId) {
-          return schema.where("product", { storeId });
-        }
+        const products = schema
+          .all("product")
+          .models.map((model) => model.attrs as ProductRecord)
+          .filter((product) => {
+            if (!storeId) return true;
+            return product.storeId === String(storeId);
+          });
 
-        return schema.all("product");
+        return { products };
       });
 
       this.post("/products", (schema, request) => {
-        const attrs = JSON.parse(request.requestBody);
+        const attrs = JSON.parse(request.requestBody) as Omit<
+          ProductRecord,
+          "id" | "createdAt"
+        >;
 
-        return schema.create("product", {
+        const product = schema.create("product", {
+          id: crypto.randomUUID(),
           ...attrs,
           createdAt: new Date().toISOString(),
         });
+
+        return product.attrs;
       });
 
       this.put("/products/:id", (schema, request) => {
         const id = request.params.id;
-        const attrs = JSON.parse(request.requestBody);
 
+        if (!id) {
+          return new Response(400, {}, { message: "ID do produto inválido." });
+        }
+
+        const attrs = JSON.parse(request.requestBody) as Partial<ProductRecord>;
         const product = schema.find("product", id);
 
-        return product?.update(attrs);
+        if (!product) {
+          return new Response(404, {}, { message: "Produto não encontrado." });
+        }
+
+        product.update(attrs);
+        return product.attrs;
       });
 
       this.delete("/products/:id", (schema, request) => {
         const id = request.params.id;
-        return schema.find("product", id)?.destroy();
+
+        if (!id) {
+          return new Response(400, {}, { message: "ID do produto inválido." });
+        }
+
+        const product = schema.find("product", id);
+
+        if (!product) {
+          return new Response(404, {}, { message: "Produto não encontrado." });
+        }
+
+        product.destroy();
+        return new Response(204);
       });
 
       this.passthrough();

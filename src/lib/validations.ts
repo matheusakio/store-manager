@@ -27,7 +27,7 @@ export const productSchema = z.object({
   name: z.string().min(2, "Informe o nome do produto").trim(),
   category: productCategoryInputSchema,
   price: productPriceInputSchema,
-  imageUrl: z.string().trim().optional(),
+  imageUri: z.string().trim().optional(),
 });
 
 export type ProductFormInput = z.input<typeof productSchema>;
