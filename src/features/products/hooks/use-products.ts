@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { productsRepository } from "../services/products.repository";
 import type { Product } from "../types/product.types";
+import { useAppStore } from "@/store/app-store";
 
 export function useProducts(storeId: string) {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const resetProductFilters = useAppStore((state) => state.resetProductFilters);
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -13,7 +16,6 @@ export function useProducts(storeId: string) {
       setError(null);
 
       const data = await productsRepository.listByStore(storeId);
-
       setProducts(data);
     } catch {
       setError("Erro ao carregar produtos.");
@@ -23,8 +25,9 @@ export function useProducts(storeId: string) {
   }, [storeId]);
 
   useEffect(() => {
+    resetProductFilters();
     fetchProducts();
-  }, [fetchProducts]);
+  }, [fetchProducts, resetProductFilters]);
 
   return {
     products,
