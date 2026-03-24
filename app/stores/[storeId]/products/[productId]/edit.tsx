@@ -39,7 +39,7 @@ export default function EditProductScreen() {
         name: values.name,
         category: values.category,
         price: values.price,
-        ...(values.imageUrl ? { imageUrl: values.imageUrl } : {}),
+        ...(values.imageUri ? { imageUri: values.imageUri } : {}),
       });
 
       router.replace(`/stores/${storeId}`);
@@ -49,7 +49,6 @@ export default function EditProductScreen() {
       setIsSubmitting(false);
     }
   }
-
   if (isLoading) {
     return (
       <AppScreen>
@@ -82,7 +81,7 @@ export default function EditProductScreen() {
             name: product.name,
             category: product.category,
             price: String(product.price),
-            imageUrl: product.imageUrl ?? "",
+            imageUri: product.imageUri ?? "",
           }}
           onSubmit={handleUpdateProduct}
           isSubmitting={isSubmitting}

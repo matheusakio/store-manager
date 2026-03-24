@@ -25,7 +25,7 @@ export default function NewProductScreen() {
         name: values.name,
         category: values.category,
         price: values.price,
-        ...(values.imageUrl ? { imageUrl: values.imageUrl } : {}),
+        ...(values.imageUri ? { imageUri: values.imageUri } : {}),
       });
 
       router.replace(`/stores/${storeId}`);

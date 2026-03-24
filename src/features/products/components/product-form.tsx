@@ -5,12 +5,14 @@ import { StyleSheet, View } from "react-native";
 import { Button, ButtonText } from "@/components/ui/button";
 import { TextField } from "@/components/forms/text-field";
 import { PriceField } from "@/components/forms/price-field";
+import { ImagePickerField } from "@/components/forms/image-picker-field";
 import {
   productSchema,
   type ProductFormInput,
   type ProductFormValues,
 } from "@/lib/validations";
 import { CategorySelect } from "./category-select";
+import { theme } from "@/theme";
 
 type ProductFormProps = {
   defaultValues?: ProductFormInput;
@@ -35,7 +37,7 @@ export function ProductForm({
       name: "",
       category: "",
       price: "",
-      imageUrl: "",
+      imageUri: "",
     },
   });
 
@@ -83,14 +85,14 @@ export function ProductForm({
 
       <Controller
         control={control}
-        name="imageUrl"
+        name="imageUri"
         render={({ field: { value, onChange } }) => (
-          <TextField
-            label="URL da imagem (opcional)"
-            value={value ?? ""}
-            onChangeText={onChange}
-            placeholder="https://..."
-            error={errors.imageUrl?.message}
+          <ImagePickerField
+            label="Imagem do produto"
+            value={value}
+            onChange={onChange}
+            onClear={() => onChange("")}
+            error={errors.imageUri?.message}
           />
         )}
       />
@@ -104,6 +106,6 @@ export function ProductForm({
 
 const styles = StyleSheet.create({
   container: {
-    gap: 16,
+    gap: theme.spacing.lg,
   },
 });
