@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Alert } from "react-native";
 import { useRouter } from "expo-router";
 
 import { Button, ButtonText } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { SectionHeader } from "@/components/ui/section-header";
 import { StoreCard } from "@/features/stores/components/store-card";
+import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
 import { useStores } from "@/features/stores/hooks/use-stores";
 import type { StoreWithProductsCount } from "@/features/stores/types/store.types";
 import { useAppStore } from "@/store/app-store";
@@ -17,6 +18,7 @@ import { useAppStore } from "@/store/app-store";
 export default function HomeScreen() {
   const router = useRouter();
   const { stores, isLoading, error, refetch } = useStores();
+  const { deleteStore } = useStoreActions();
 
   const storeSearch = useAppStore((state) => state.storeSearch);
   const setStoreSearch = useAppStore((state) => state.setStoreSearch);
@@ -41,6 +43,15 @@ export default function HomeScreen() {
         store.address.toLowerCase().includes(query),
     );
   }, [storeSearch, storesWithCount]);
+
+  async function handleDeleteStore(storeId: string) {
+    try {
+      await deleteStore(storeId);
+      await refetch();
+    } catch {
+      Alert.alert("Erro", "Não foi possível excluir a loja.");
+    }
+  }
 
   return (
     <AppScreen>
@@ -81,6 +92,8 @@ export default function HomeScreen() {
                     key={store.id}
                     store={store}
                     onPress={() => router.push(`/stores/${store.id}`)}
+                    onEdit={() => router.push(`/stores/${store.id}/edit`)}
+                    onDelete={() => handleDeleteStore(store.id)}
                   />
                 ))}
               </View>

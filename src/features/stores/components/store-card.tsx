@@ -1,13 +1,27 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { MapPin, Package } from "lucide-react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { MapPin, Package, Pencil, Trash2 } from "lucide-react-native";
 import type { StoreWithProductsCount } from "../types/store.types";
 
 type StoreCardProps = {
   store: StoreWithProductsCount;
   onPress: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 };
 
-export function StoreCard({ store, onPress }: StoreCardProps) {
+export function StoreCard({
+  store,
+  onPress,
+  onEdit,
+  onDelete,
+}: StoreCardProps) {
+  function handleDeletePress() {
+    Alert.alert("Excluir loja", `Deseja excluir "${store.name}"?`, [
+      { text: "Cancelar", style: "cancel" },
+      { text: "Excluir", style: "destructive", onPress: onDelete },
+    ]);
+  }
+
   return (
     <TouchableOpacity activeOpacity={0.9} onPress={onPress} style={styles.card}>
       <View style={styles.content}>
@@ -30,6 +44,21 @@ export function StoreCard({ store, onPress }: StoreCardProps) {
           </View>
 
           <Text style={styles.linkText}>Ver produtos</Text>
+        </View>
+
+        <View style={styles.actions}>
+          <TouchableOpacity onPress={onEdit} style={styles.actionButton}>
+            <Pencil size={16} color="#0F172A" />
+            <Text style={styles.actionText}>Editar</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleDeletePress}
+            style={styles.actionButton}
+          >
+            <Trash2 size={16} color="#DC2626" />
+            <Text style={[styles.actionText, styles.deleteText]}>Excluir</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -83,5 +112,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: "#0F766E",
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 16,
+  },
+  actionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  actionText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#0F172A",
+  },
+  deleteText: {
+    color: "#DC2626",
   },
 });
