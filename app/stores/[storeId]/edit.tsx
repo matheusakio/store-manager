@@ -1,57 +1,82 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { AppHeader } from "@/components/ui/app-header";
 import { AppScreen } from "@/components/ui/app-screen";
+import { ErrorState } from "@/components/ui/error-state";
+import { LoadingState } from "@/components/ui/loading-state";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { ProductForm } from "@/features/products/components/product-form";
-import { useProductActions } from "@/features/products/hooks/use-product-actions";
-import type { ProductFormValues } from "@/lib/validations";
+import { StoreForm } from "@/features/stores/components/store-form";
+import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
+import { useStores } from "@/features/stores/hooks/use-stores";
+import type { StoreFormValues } from "@/lib/validations";
+
 import { theme } from "@/theme";
 
-export default function NewProductScreen() {
+export default function EditStoreScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ storeId: string }>();
   const storeId = String(params.storeId);
 
-  const { createProduct } = useProductActions();
+  const { isLoading, error, getStoreById, refetch } = useStores();
+  const { updateStore } = useStoreActions();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleCreateProduct(values: ProductFormValues) {
+  const store = useMemo(() => getStoreById(storeId), [getStoreById, storeId]);
+
+  async function handleUpdateStore(values: StoreFormValues) {
     try {
       setIsSubmitting(true);
 
-      await createProduct({
-        storeId,
-        name: values.name,
-        category: values.category,
-        price: values.price,
-        ...(values.imageUri ? { imageUri: values.imageUri } : {}),
-      });
+      await updateStore(storeId, values);
 
-      showSuccess("Produto criado com sucesso.");
-      router.replace(`/stores/${storeId}`);
+      showSuccess("Loja atualizada com sucesso.");
+      router.replace("/");
     } catch {
-      showError("Não foi possível criar o produto.");
+      showError("Não foi possível atualizar a loja.");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <AppScreen>
+        <LoadingState label="Carregando loja..." />
+      </AppScreen>
+    );
+  }
+
+  if (error || !store) {
+    return (
+      <AppScreen>
+        <ErrorState
+          message={error ?? "Loja não encontrada."}
+          onRetry={refetch}
+        />
+      </AppScreen>
+    );
   }
 
   return (
     <AppScreen>
       <View style={styles.container}>
         <AppHeader
-          title="Novo produto"
-          subtitle="Cadastre um item para esta loja"
+          title="Editar loja"
+          subtitle="Atualize os dados da unidade"
           showBackButton
         />
 
-        <ProductForm
-          onSubmit={handleCreateProduct}
+        <StoreForm
+          defaultValues={{
+            name: store.name,
+            address: store.address,
+          }}
+          onSubmit={handleUpdateStore}
           isSubmitting={isSubmitting}
-          submitLabel="Criar produto"
+          submitLabel="Salvar alterações"
         />
       </View>
     </AppScreen>

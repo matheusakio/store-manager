@@ -23,7 +23,7 @@ function generateId() {
 
 const MOCK_ERRORS = {
   stores: false,
-  createStore: true,
+  createStore: false,
   updateStore: false,
   deleteStore: false,
 
@@ -99,10 +99,6 @@ export function makeServer() {
 
     routes() {
       this.namespace = "api";
-
-      /**
-       * STORES
-       */
 
       this.get("/stores", async (schema) => {
         const error = await simulateErrorWithDelay(

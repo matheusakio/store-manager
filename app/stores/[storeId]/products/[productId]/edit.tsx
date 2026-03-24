@@ -1,18 +1,24 @@
 import { useMemo, useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+import { AppHeader } from "@/components/ui/app-header";
 import { AppScreen } from "@/components/ui/app-screen";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
-import { SectionHeader } from "@/components/ui/section-header";
+
+import { showError, showSuccess } from "@/components/feedback/app-alert";
 import { ProductForm } from "@/features/products/components/product-form";
 import { useProductActions } from "@/features/products/hooks/use-product-actions";
 import { useProducts } from "@/features/products/hooks/use-products";
+
 import type { ProductFormValues } from "@/lib/validations";
+import { numberToBRLInput } from "@/lib/currency";
+import { theme } from "@/theme";
 
 export default function EditProductScreen() {
   const router = useRouter();
+
   const params = useLocalSearchParams<{
     storeId: string;
     productId: string;
@@ -21,14 +27,14 @@ export default function EditProductScreen() {
   const storeId = String(params.storeId);
   const productId = String(params.productId);
 
-  const { products, isLoading, error } = useProducts(storeId);
+  const { products, isLoading, error, refetch } = useProducts(storeId);
   const { updateProduct } = useProductActions();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const product = useMemo(
     () => products.find((item) => item.id === productId) ?? null,
-    [productId, products],
+    [products, productId],
   );
 
   async function handleUpdateProduct(values: ProductFormValues) {
@@ -42,13 +48,16 @@ export default function EditProductScreen() {
         ...(values.imageUri ? { imageUri: values.imageUri } : {}),
       });
 
+      showSuccess("Produto atualizado com sucesso.");
+
       router.replace(`/stores/${storeId}`);
     } catch {
-      Alert.alert("Erro", "Não foi possível atualizar o produto.");
+      showError("Não foi possível atualizar o produto.");
     } finally {
       setIsSubmitting(false);
     }
   }
+
   if (isLoading) {
     return (
       <AppScreen>
@@ -62,7 +71,7 @@ export default function EditProductScreen() {
       <AppScreen>
         <ErrorState
           message={error ?? "Produto não encontrado."}
-          onRetry={() => router.replace(`/stores/${storeId}`)}
+          onRetry={refetch}
         />
       </AppScreen>
     );
@@ -71,19 +80,17 @@ export default function EditProductScreen() {
   return (
     <AppScreen>
       <View style={styles.container}>
-        <SectionHeader
+        <AppHeader
           title="Editar produto"
           subtitle="Atualize os dados do item"
+          showBackButton
         />
 
         <ProductForm
           defaultValues={{
             name: product.name,
             category: product.category,
-            price: product.price.toLocaleString("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            }),
+            price: numberToBRLInput(product.price),
             imageUri: product.imageUri ?? "",
           }}
           onSubmit={handleUpdateProduct}
@@ -97,6 +104,6 @@ export default function EditProductScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: theme.spacing.xl,
   },
 });
