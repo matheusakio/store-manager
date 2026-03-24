@@ -1,13 +1,22 @@
 import type { PropsWithChildren } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Box } from "@gluestack-ui/themed";
+import { StyleSheet, View } from "react-native";
 
 export function AppScreen({ children }: PropsWithChildren) {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Box flex={1} bg="$backgroundLight0" px="$4" py="$4">
-        {children}
-      </Box>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>{children}</View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#F8FAFC",
+  },
+});
