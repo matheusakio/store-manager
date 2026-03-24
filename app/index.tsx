@@ -1,62 +1,72 @@
 import { useMemo } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import { AppScreen } from "@/components/ui/app-screen";
 import { AppHeader } from "@/components/ui/app-header";
-import { HeroCard } from "@/components/ui/hero-card";
+import { AppScreen } from "@/components/ui/app-screen";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
+import { HeroCard } from "@/components/ui/hero-card";
 import { LoadingState } from "@/components/ui/loading-state";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { SearchInput } from "@/components/ui/search-input";
-import { Button, ButtonText } from "@/components/ui/button";
 
+import { useAllProducts } from "@/features/products/hooks/use-all-products";
+import { StoreListFilter } from "@/features/stores/components/store-list-filter";
 import { StoreCard } from "@/features/stores/components/store-card";
 import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
 import { useStores } from "@/features/stores/hooks/use-stores";
-import type { StoreWithProductsCount } from "@/features/stores/types/store.types";
+import { mapStoresWithProductsCount } from "@/features/stores/utils/store.mappers";
 import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { stores, isLoading, error, refetch } = useStores();
+
+  const {
+    stores = [],
+    isLoading: isLoadingStores,
+    error,
+    refetch,
+  } = useStores();
+
+  const { products = [], isLoading: isLoadingProducts } = useAllProducts();
+
   const { deleteStore } = useStoreActions();
 
   const storeSearch = useAppStore((state) => state.storeSearch);
   const setStoreSearch = useAppStore((state) => state.setStoreSearch);
+  const storeListFilter = useAppStore((state) => state.storeListFilter);
+  const setStoreListFilter = useAppStore((state) => state.setStoreListFilter);
 
-  const storesWithCount = useMemo<StoreWithProductsCount[]>(
-    () =>
-      stores.map((store) => ({
-        ...store,
-        productsCount: 0,
-      })),
-    [stores],
-  );
+  const storesWithCount = useMemo(() => {
+    return mapStoresWithProductsCount(stores ?? [], products ?? []);
+  }, [stores, products]);
 
   const filteredStores = useMemo(() => {
     const query = storeSearch.trim().toLowerCase();
 
-    if (!query) return storesWithCount;
-
-    return storesWithCount.filter(
-      (store) =>
+    return storesWithCount.filter((store) => {
+      const matchesSearch =
+        !query ||
         store.name.toLowerCase().includes(query) ||
-        store.address.toLowerCase().includes(query),
-    );
-  }, [storeSearch, storesWithCount]);
+        store.address.toLowerCase().includes(query);
+
+      const matchesFilter =
+        storeListFilter === "all" ||
+        (storeListFilter === "with-products" && store.productsCount > 0) ||
+        (storeListFilter === "empty" && store.productsCount === 0);
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [storeSearch, storeListFilter, storesWithCount]);
 
   async function handleDeleteStore(storeId: string) {
-    try {
-      await deleteStore(storeId);
-      await refetch();
-    } catch {
-      Alert.alert("Erro", "Não foi possível excluir a loja.");
-    }
+    await deleteStore(storeId);
+    await refetch();
   }
 
-  if (isLoading) {
+  if (isLoadingStores || isLoadingProducts) {
     return (
       <AppScreen>
         <LoadingState label="Carregando lojas..." />
@@ -83,7 +93,7 @@ export default function HomeScreen() {
           <View style={styles.headerContent}>
             <AppHeader
               title="Lojas"
-              subtitle={`${filteredStores.length} unidades cadastradas`}
+              subtitle={`${filteredStores.length} unidades visíveis`}
             />
 
             <HeroCard
@@ -98,9 +108,15 @@ export default function HomeScreen() {
               placeholder="Buscar por nome ou endereço"
             />
 
-            <Button onPress={() => router.push("/stores/new")}>
-              <ButtonText>Nova loja</ButtonText>
-            </Button>
+            <StoreListFilter
+              value={storeListFilter}
+              onChange={setStoreListFilter}
+            />
+
+            <PrimaryButton
+              label="Cadastrar nova loja"
+              onPress={() => router.push("/stores/new")}
+            />
           </View>
         }
         ListEmptyComponent={

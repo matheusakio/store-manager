@@ -1,54 +1,65 @@
 import { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { useRouter } from "expo-router";
 
+import { AppHeader } from "@/components/ui/app-header";
 import { AppScreen } from "@/components/ui/app-screen";
-import { SectionHeader } from "@/components/ui/section-header";
-import { ProductForm } from "@/features/products/components/product-form";
-import { useProductActions } from "@/features/products/hooks/use-product-actions";
-import type { ProductFormValues } from "@/lib/validations";
+import { PrimaryButton } from "@/components/ui/primary-button";
+import { TextField } from "@/components/forms/text-field";
+import { showError, showSuccess } from "@/components/feedback/app-alert";
+import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
+import { theme } from "@/theme";
 
-export default function NewProductScreen() {
+export default function NewStoreScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ storeId: string }>();
-  const storeId = String(params.storeId);
+  const { createStore } = useStoreActions();
 
-  const { createProduct } = useProductActions();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
 
-  async function handleCreateProduct(values: ProductFormValues) {
+  async function handleSubmit() {
+    if (!name.trim() || !address.trim()) {
+      showError("Preencha nome e endereço da loja.");
+      return;
+    }
+
     try {
-      setIsSubmitting(true);
-
-      await createProduct({
-        storeId,
-        name: values.name,
-        category: values.category,
-        price: values.price,
-        ...(values.imageUri ? { imageUri: values.imageUri } : {}),
+      await createStore({
+        name: name.trim(),
+        address: address.trim(),
       });
 
-      router.replace(`/stores/${storeId}`);
+      showSuccess("Loja criada com sucesso.");
+      router.replace("/");
     } catch {
-      Alert.alert("Erro", "Não foi possível criar o produto.");
-    } finally {
-      setIsSubmitting(false);
+      showError("Não foi possível criar a loja.");
     }
   }
 
   return (
     <AppScreen>
       <View style={styles.container}>
-        <SectionHeader
-          title="Novo produto"
-          subtitle="Cadastre um item para esta loja"
+        <AppHeader
+          title="Nova loja"
+          subtitle="Cadastre uma nova unidade"
+          showBackButton
         />
 
-        <ProductForm
-          onSubmit={handleCreateProduct}
-          isSubmitting={isSubmitting}
-          submitLabel="Criar produto"
+        <TextField
+          label="Nome da loja"
+          value={name}
+          onChangeText={setName}
+          placeholder="Ex: Loja Centro"
         />
+
+        <TextField
+          label="Endereço"
+          value={address}
+          onChangeText={setAddress}
+          placeholder="Ex: Centro - São Paulo"
+        />
+
+        <PrimaryButton label="Criar loja" onPress={handleSubmit} />
       </View>
     </AppScreen>
   );
@@ -56,6 +67,6 @@ export default function NewProductScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: theme.spacing.xl,
   },
 });

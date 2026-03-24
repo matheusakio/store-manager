@@ -1,14 +1,14 @@
 import { useMemo } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AppScreen } from "@/components/ui/app-screen";
 import { AppHeader } from "@/components/ui/app-header";
+import { AppScreen } from "@/components/ui/app-screen";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
+import { PrimaryButton } from "@/components/ui/primary-button";
 import { SearchInput } from "@/components/ui/search-input";
-import { Button, ButtonText } from "@/components/ui/button";
 
 import { CategoryFilter } from "@/features/products/components/category-filter";
 import { ProductCard } from "@/features/products/components/product-card";
@@ -23,7 +23,7 @@ export default function StoreDetailsScreen() {
   const params = useLocalSearchParams<{ storeId: string }>();
   const storeId = String(params.storeId);
 
-  const { products, isLoading, error, refetch } = useProducts(storeId);
+  const { products = [], isLoading, error, refetch } = useProducts(storeId);
   const { getStoreById, isLoading: isLoadingStore } = useStores();
   const { deleteProduct } = useProductActions();
 
@@ -35,7 +35,7 @@ export default function StoreDetailsScreen() {
   const store = useMemo(() => getStoreById(storeId), [getStoreById, storeId]);
 
   const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
+    return (products ?? []).filter((product) => {
       const query = productSearch.trim().toLowerCase();
 
       const matchesSearch =
@@ -50,12 +50,8 @@ export default function StoreDetailsScreen() {
   }, [productSearch, products, selectedCategory]);
 
   async function handleDeleteProduct(productId: string) {
-    try {
-      await deleteProduct(productId);
-      await refetch();
-    } catch {
-      Alert.alert("Erro", "Não foi possível excluir o produto.");
-    }
+    await deleteProduct(productId);
+    await refetch();
   }
 
   if (isLoading || isLoadingStore) {
@@ -103,11 +99,10 @@ export default function StoreDetailsScreen() {
               onChange={setSelectedCategory}
             />
 
-            <Button
+            <PrimaryButton
+              label="Cadastrar novo produto"
               onPress={() => router.push(`/stores/${storeId}/products/new`)}
-            >
-              <ButtonText>Novo produto</ButtonText>
-            </Button>
+            />
           </View>
         }
         ListEmptyComponent={
