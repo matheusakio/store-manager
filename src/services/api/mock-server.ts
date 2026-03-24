@@ -17,6 +17,45 @@ type ProductRecord = {
   createdAt: string;
 };
 
+function generateId() {
+  return `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+}
+
+const MOCK_ERRORS = {
+  stores: false,
+  createStore: true,
+  updateStore: false,
+  deleteStore: false,
+
+  products: false,
+  createProduct: false,
+  updateProduct: false,
+  deleteProduct: false,
+};
+
+function simulateError(
+  enabled: boolean,
+  status = 400,
+  message = "Erro simulado",
+) {
+  if (!enabled) return null;
+
+  return new Response(status, {}, { message });
+}
+
+async function simulateErrorWithDelay(
+  enabled: boolean,
+  delay = 600,
+  status = 400,
+  message = "Erro simulado",
+) {
+  if (!enabled) return null;
+
+  await new Promise((resolve) => setTimeout(resolve, delay));
+
+  return new Response(status, {}, { message });
+}
+
 export function makeServer() {
   return createServer({
     models: {
@@ -61,7 +100,19 @@ export function makeServer() {
     routes() {
       this.namespace = "api";
 
-      this.get("/stores", (schema) => {
+      /**
+       * STORES
+       */
+
+      this.get("/stores", async (schema) => {
+        const error = await simulateErrorWithDelay(
+          MOCK_ERRORS.stores,
+          800,
+          400,
+          "Erro ao listar lojas",
+        );
+        if (error) return error;
+
         const stores = schema
           .all("store")
           .models.map((model) => model.attrs as StoreRecord);
@@ -70,13 +121,20 @@ export function makeServer() {
       });
 
       this.post("/stores", (schema, request) => {
+        const error = simulateError(
+          MOCK_ERRORS.createStore,
+          400,
+          "Erro ao criar loja",
+        );
+        if (error) return error;
+
         const attrs = JSON.parse(request.requestBody) as Omit<
           StoreRecord,
           "id" | "createdAt"
         >;
 
         const store = schema.create("store", {
-          id: crypto.randomUUID(),
+          id: generateId(),
           ...attrs,
           createdAt: new Date().toISOString(),
         });
@@ -85,6 +143,13 @@ export function makeServer() {
       });
 
       this.put("/stores/:id", (schema, request) => {
+        const error = simulateError(
+          MOCK_ERRORS.updateStore,
+          400,
+          "Erro ao atualizar loja",
+        );
+        if (error) return error;
+
         const id = request.params.id;
 
         if (!id) {
@@ -103,6 +168,13 @@ export function makeServer() {
       });
 
       this.delete("/stores/:id", (schema, request) => {
+        const error = simulateError(
+          MOCK_ERRORS.deleteStore,
+          400,
+          "Erro ao deletar loja",
+        );
+        if (error) return error;
+
         const id = request.params.id;
 
         if (!id) {
@@ -127,7 +199,19 @@ export function makeServer() {
         return new Response(204);
       });
 
-      this.get("/products", (schema, request) => {
+      /**
+       * PRODUCTS
+       */
+
+      this.get("/products", async (schema, request) => {
+        const error = await simulateErrorWithDelay(
+          MOCK_ERRORS.products,
+          700,
+          400,
+          "Erro ao listar produtos",
+        );
+        if (error) return error;
+
         const storeId = request.queryParams.storeId;
 
         const products = schema
@@ -142,13 +226,20 @@ export function makeServer() {
       });
 
       this.post("/products", (schema, request) => {
+        const error = simulateError(
+          MOCK_ERRORS.createProduct,
+          400,
+          "Erro ao criar produto",
+        );
+        if (error) return error;
+
         const attrs = JSON.parse(request.requestBody) as Omit<
           ProductRecord,
           "id" | "createdAt"
         >;
 
         const product = schema.create("product", {
-          id: crypto.randomUUID(),
+          id: generateId(),
           ...attrs,
           createdAt: new Date().toISOString(),
         });
@@ -157,6 +248,13 @@ export function makeServer() {
       });
 
       this.put("/products/:id", (schema, request) => {
+        const error = simulateError(
+          MOCK_ERRORS.updateProduct,
+          400,
+          "Erro ao atualizar produto",
+        );
+        if (error) return error;
+
         const id = request.params.id;
 
         if (!id) {
@@ -175,6 +273,13 @@ export function makeServer() {
       });
 
       this.delete("/products/:id", (schema, request) => {
+        const error = simulateError(
+          MOCK_ERRORS.deleteProduct,
+          400,
+          "Erro ao deletar produto",
+        );
+        if (error) return error;
+
         const id = request.params.id;
 
         if (!id) {

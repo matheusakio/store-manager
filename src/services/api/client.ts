@@ -1,36 +1,50 @@
+const BASE_URL = "/api";
+
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${BASE_URL}${path}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(options?.headers ?? {}),
+    },
+    ...options,
+  });
+
+  const hasJson = response.headers
+    .get("content-type")
+    ?.includes("application/json");
+
+  const data = hasJson ? await response.json() : null;
+
+  if (!response.ok) {
+    throw new Error(data?.message ?? "Erro na requisição.");
+  }
+
+  return data as T;
+}
+
 export const api = {
-  async get<T>(url: string): Promise<T> {
-    const response = await fetch(`/api${url}`);
-    const data = await response.json();
-    return data;
+  get<T>(path: string) {
+    return request<T>(path, {
+      method: "GET",
+    });
   },
 
-  async post<T>(url: string, body: unknown): Promise<T> {
-    const response = await fetch(`/api${url}`, {
+  post<T>(path: string, body: unknown) {
+    return request<T>(path, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(body),
     });
-
-    return response.json();
   },
 
-  async put<T>(url: string, body: unknown): Promise<T> {
-    const response = await fetch(`/api${url}`, {
+  put<T>(path: string, body: unknown) {
+    return request<T>(path, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(body),
     });
-
-    return response.json();
   },
 
-  async delete(url: string) {
-    await fetch(`/api${url}`, {
+  delete(path: string) {
+    return request<void>(path, {
       method: "DELETE",
     });
   },
