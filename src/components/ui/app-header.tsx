@@ -24,7 +24,7 @@ export function AppHeader({
           onPress={() => router.back()}
           style={styles.backButton}
         >
-          <ChevronLeft size={20} color={theme.colors.text} />
+          <ChevronLeft size={22} color={theme.colors.text} />
         </TouchableOpacity>
       ) : null}
 
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
   },
   backButton: {
-    width: 42,
-    height: 42,
+    width: 48,
+    height: 48,
     borderRadius: theme.radius.pill,
     backgroundColor: theme.colors.surface,
     borderWidth: 1,
@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "800",
+    fontSize: 30,
+    fontWeight: "900",
     color: theme.colors.text,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     color: theme.colors.textSecondary,
   },
 });
