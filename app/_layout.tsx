@@ -1,7 +1,8 @@
 import { Stack } from "expo-router";
+
+import "../global.css";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { makeServer } from "@/services/api/mock-server";
-import "@/global.css";
 
 if (__DEV__) {
   makeServer();

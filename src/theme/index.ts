@@ -11,6 +11,7 @@ export const theme = {
     textMuted: "#94A3B8",
 
     primary: "#0F766E",
+    primaryStrong: "#115E59",
     primarySoft: "#CCFBF1",
 
     danger: "#DC2626",
@@ -20,32 +21,32 @@ export const theme = {
     warningSoft: "#FEF3C7",
   },
 
+  gradients: {
+    hero: ["#134E4A", "#0F766E", "#14B8A6"] as const,
+    darkCard: ["#0F172A", "#1E293B"] as const,
+  },
+
   category: {
     electronics: {
       background: "#DBEAFE",
       text: "#1D4ED8",
     },
-
     clothes: {
       background: "#FCE7F3",
       text: "#BE185D",
     },
-
     food: {
       background: "#DCFCE7",
       text: "#15803D",
     },
-
     home: {
       background: "#FEF3C7",
       text: "#B45309",
     },
-
     beauty: {
       background: "#EDE9FE",
       text: "#7C3AED",
     },
-
     other: {
       background: "#E2E8F0",
       text: "#475569",
@@ -59,6 +60,7 @@ export const theme = {
     lg: 16,
     xl: 20,
     xxl: 24,
+    xxxl: 32,
   },
 
   radius: {
@@ -66,6 +68,7 @@ export const theme = {
     md: 14,
     lg: 18,
     xl: 22,
+    xxl: 28,
     pill: 999,
   },
 
@@ -77,5 +80,12 @@ export const theme = {
       shadowRadius: 16,
       elevation: 3,
     },
+    hero: {
+      shadowColor: "#0F172A",
+      shadowOpacity: 0.12,
+      shadowOffset: { width: 0, height: 10 },
+      shadowRadius: 18,
+      elevation: 5,
+    },
   },
-};
+} as const;

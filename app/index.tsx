@@ -1,19 +1,22 @@
 import { useMemo } from "react";
-import { ScrollView, StyleSheet, View, Alert } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import { Button, ButtonText } from "@/components/ui/button";
 import { AppScreen } from "@/components/ui/app-screen";
+import { AppHeader } from "@/components/ui/app-header";
+import { HeroCard } from "@/components/ui/hero-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
-import { SectionHeader } from "@/components/ui/section-header";
+import { Button, ButtonText } from "@/components/ui/button";
+
 import { StoreCard } from "@/features/stores/components/store-card";
 import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
 import { useStores } from "@/features/stores/hooks/use-stores";
 import type { StoreWithProductsCount } from "@/features/stores/types/store.types";
 import { useAppStore } from "@/store/app-store";
+import { theme } from "@/theme";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -53,70 +56,82 @@ export default function HomeScreen() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <AppScreen>
+        <LoadingState label="Carregando lojas..." />
+      </AppScreen>
+    );
+  }
+
+  if (error) {
+    return (
+      <AppScreen>
+        <ErrorState message={error} onRetry={refetch} />
+      </AppScreen>
+    );
+  }
+
   return (
     <AppScreen>
-      <View style={styles.container}>
-        <SectionHeader
-          title="Lojas"
-          subtitle={`${filteredStores.length} itens`}
-        />
-
-        <SearchInput
-          value={storeSearch}
-          onChangeText={setStoreSearch}
-          placeholder="Buscar por nome ou endereço"
-        />
-
-        <Button onPress={() => router.push("/stores/new")}>
-          <ButtonText>Nova loja</ButtonText>
-        </Button>
-
-        <View style={styles.content}>
-          {isLoading ? (
-            <LoadingState label="Carregando lojas..." />
-          ) : error ? (
-            <ErrorState message={error} onRetry={refetch} />
-          ) : filteredStores.length === 0 ? (
-            <EmptyState
-              title="Nenhuma loja encontrada"
-              description="Cadastre sua primeira loja ou ajuste sua busca."
+      <FlatList
+        data={filteredStores}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+        ListHeaderComponent={
+          <View style={styles.headerContent}>
+            <AppHeader
+              title="Lojas"
+              subtitle={`${filteredStores.length} unidades cadastradas`}
             />
-          ) : (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollContent}
-            >
-              <View style={styles.list}>
-                {filteredStores.map((store) => (
-                  <StoreCard
-                    key={store.id}
-                    store={store}
-                    onPress={() => router.push(`/stores/${store.id}`)}
-                    onEdit={() => router.push(`/stores/${store.id}/edit`)}
-                    onDelete={() => handleDeleteStore(store.id)}
-                  />
-                ))}
-              </View>
-            </ScrollView>
-          )}
-        </View>
-      </View>
+
+            <HeroCard
+              eyebrow="Painel central"
+              title="Gerencie lojas e produtos com mais clareza"
+              description="Cadastre unidades, organize o catálogo e acompanhe os itens de cada loja em um só lugar."
+            />
+
+            <SearchInput
+              value={storeSearch}
+              onChangeText={setStoreSearch}
+              placeholder="Buscar por nome ou endereço"
+            />
+
+            <Button onPress={() => router.push("/stores/new")}>
+              <ButtonText>Nova loja</ButtonText>
+            </Button>
+          </View>
+        }
+        ListEmptyComponent={
+          <EmptyState
+            title="Nenhuma loja encontrada"
+            description="Cadastre sua primeira loja ou ajuste sua busca."
+          />
+        }
+        renderItem={({ item }) => (
+          <StoreCard
+            store={item}
+            onPress={() => router.push(`/stores/${item.id}`)}
+            onEdit={() => router.push(`/stores/${item.id}/edit`)}
+            onDelete={() => handleDeleteStore(item.id)}
+          />
+        )}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
     </AppScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 16,
+  listContent: {
+    paddingBottom: theme.spacing.xxxl,
   },
-  content: {
-    flex: 1,
+  headerContent: {
+    gap: theme.spacing.lg,
+    marginBottom: theme.spacing.lg,
   },
-  scrollContent: {
-    paddingBottom: 24,
-  },
-  list: {
-    gap: 12,
+  separator: {
+    height: theme.spacing.md,
   },
 });

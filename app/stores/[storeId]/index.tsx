@@ -1,14 +1,14 @@
 import { useMemo } from "react";
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, FlatList, StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { Button, ButtonText } from "@/components/ui/button";
 import { AppScreen } from "@/components/ui/app-screen";
+import { AppHeader } from "@/components/ui/app-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
-import { SectionHeader } from "@/components/ui/section-header";
+import { Button, ButtonText } from "@/components/ui/button";
 
 import { CategoryFilter } from "@/features/products/components/category-filter";
 import { ProductCard } from "@/features/products/components/product-card";
@@ -16,6 +16,7 @@ import { useProductActions } from "@/features/products/hooks/use-product-actions
 import { useProducts } from "@/features/products/hooks/use-products";
 import { useStores } from "@/features/stores/hooks/use-stores";
 import { useAppStore } from "@/store/app-store";
+import { theme } from "@/theme";
 
 export default function StoreDetailsScreen() {
   const router = useRouter();
@@ -78,69 +79,67 @@ export default function StoreDetailsScreen() {
 
   return (
     <AppScreen>
-      <View style={styles.container}>
-        <SectionHeader title={store.name} subtitle={store.address} />
-
-        <SearchInput
-          value={productSearch}
-          onChangeText={setProductSearch}
-          placeholder="Buscar produto ou categoria"
-        />
-
-        <CategoryFilter
-          value={selectedCategory}
-          onChange={setSelectedCategory}
-        />
-
-        <Button onPress={() => router.push(`/stores/${storeId}/products/new`)}>
-          <ButtonText>Novo produto</ButtonText>
-        </Button>
-
-        <View style={styles.content}>
-          {filteredProducts.length === 0 ? (
-            <EmptyState
-              title="Nenhum produto encontrado"
-              description="Cadastre um produto ou ajuste os filtros."
+      <FlatList
+        data={filteredProducts}
+        keyExtractor={(item) => item.id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+        ListHeaderComponent={
+          <View style={styles.headerContent}>
+            <AppHeader
+              title={store.name}
+              subtitle={store.address}
+              showBackButton
             />
-          ) : (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.scrollContent}
+
+            <SearchInput
+              value={productSearch}
+              onChangeText={setProductSearch}
+              placeholder="Buscar produto ou categoria"
+            />
+
+            <CategoryFilter
+              value={selectedCategory}
+              onChange={setSelectedCategory}
+            />
+
+            <Button
+              onPress={() => router.push(`/stores/${storeId}/products/new`)}
             >
-              <View style={styles.list}>
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onEdit={() =>
-                      router.push(
-                        `/stores/${storeId}/products/${product.id}/edit`,
-                      )
-                    }
-                    onDelete={() => handleDeleteProduct(product.id)}
-                  />
-                ))}
-              </View>
-            </ScrollView>
-          )}
-        </View>
-      </View>
+              <ButtonText>Novo produto</ButtonText>
+            </Button>
+          </View>
+        }
+        ListEmptyComponent={
+          <EmptyState
+            title="Nenhum produto encontrado"
+            description="Cadastre um produto ou ajuste os filtros."
+          />
+        }
+        renderItem={({ item }) => (
+          <ProductCard
+            product={item}
+            onEdit={() =>
+              router.push(`/stores/${storeId}/products/${item.id}/edit`)
+            }
+            onDelete={() => handleDeleteProduct(item.id)}
+          />
+        )}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
     </AppScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 16,
+  listContent: {
+    paddingBottom: theme.spacing.xxxl,
   },
-  content: {
-    flex: 1,
+  headerContent: {
+    gap: theme.spacing.lg,
+    marginBottom: theme.spacing.lg,
   },
-  scrollContent: {
-    paddingBottom: 24,
-  },
-  list: {
-    gap: 12,
+  separator: {
+    height: theme.spacing.md,
   },
 });
