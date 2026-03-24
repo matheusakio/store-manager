@@ -80,7 +80,10 @@ export default function EditProductScreen() {
           defaultValues={{
             name: product.name,
             category: product.category,
-            price: String(product.price),
+            price: product.price.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            }),
             imageUri: product.imageUri ?? "",
           }}
           onSubmit={handleUpdateProduct}

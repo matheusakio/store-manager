@@ -1,4 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import { theme } from "@/theme";
+import { formatBRLFromDigits } from "@/lib/currency";
 
 type PriceFieldProps = {
   label: string;
@@ -12,12 +14,12 @@ export function PriceField({
   label,
   value,
   onChangeText,
-  placeholder = "0,00",
+  placeholder = "R$ 0,00",
   error,
 }: PriceFieldProps) {
   function handleChange(text: string) {
-    const cleaned = text.replace(",", ".");
-    onChangeText(cleaned);
+    const formatted = formatBRLFromDigits(text);
+    onChangeText(formatted);
   }
 
   return (
@@ -28,8 +30,8 @@ export function PriceField({
         value={value}
         onChangeText={handleChange}
         placeholder={placeholder}
-        placeholderTextColor="#94A3B8"
-        keyboardType="decimal-pad"
+        placeholderTextColor={theme.colors.textMuted}
+        keyboardType="number-pad"
         style={[styles.input, error ? styles.inputError : null]}
       />
 
@@ -40,28 +42,28 @@ export function PriceField({
 
 const styles = StyleSheet.create({
   container: {
-    gap: 8,
+    gap: theme.spacing.sm,
   },
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#0F172A",
+    color: theme.colors.text,
   },
   input: {
-    height: 52,
+    height: 56,
     borderWidth: 1,
-    borderColor: "#CBD5E1",
-    borderRadius: 16,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 14,
-    fontSize: 15,
-    color: "#0F172A",
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: theme.colors.text,
   },
   inputError: {
-    borderColor: "#DC2626",
+    borderColor: theme.colors.danger,
   },
   error: {
     fontSize: 12,
-    color: "#DC2626",
+    color: theme.colors.danger,
   },
 });

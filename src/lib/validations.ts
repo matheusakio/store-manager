@@ -18,7 +18,10 @@ const productPriceInputSchema = z
   .string()
   .trim()
   .min(1, "Informe um preço válido")
-  .transform((value) => Number(value.replace(",", ".")))
+  .transform((value) => {
+    const digits = value.replace(/\D/g, "");
+    return Number(digits) / 100;
+  })
   .refine((value) => !Number.isNaN(value) && value > 0, {
     message: "Informe um preço válido",
   });
