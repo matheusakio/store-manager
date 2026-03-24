@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ScrollView, StyleSheet, View, Alert } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { Button, ButtonText } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { SearchInput } from "@/components/ui/search-input";
 import { SectionHeader } from "@/components/ui/section-header";
+
 import { CategoryFilter } from "@/features/products/components/category-filter";
 import { ProductCard } from "@/features/products/components/product-card";
 import { useProductActions } from "@/features/products/hooks/use-product-actions";
@@ -34,13 +35,11 @@ export default function StoreDetailsScreen() {
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
+      const query = productSearch.trim().toLowerCase();
+
       const matchesSearch =
-        product.name
-          .toLowerCase()
-          .includes(productSearch.trim().toLowerCase()) ||
-        product.category
-          .toLowerCase()
-          .includes(productSearch.trim().toLowerCase());
+        product.name.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query);
 
       const matchesCategory =
         selectedCategory === "Todos" || product.category === selectedCategory;
