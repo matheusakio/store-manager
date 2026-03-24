@@ -1,25 +1,36 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { AppScreen } from "@/components/ui/app-screen";
 import { SectionHeader } from "@/components/ui/section-header";
-import { StoreForm } from "@/features/stores/components/store-form";
-import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
-import type { StoreFormValues } from "@/lib/validations";
+import { ProductForm } from "@/features/products/components/product-form";
+import { useProductActions } from "@/features/products/hooks/use-product-actions";
+import type { ProductFormValues } from "@/lib/validations";
 
-export default function NewStoreScreen() {
+export default function NewProductScreen() {
   const router = useRouter();
-  const { createStore } = useStoreActions();
+  const params = useLocalSearchParams<{ storeId: string }>();
+  const storeId = String(params.storeId);
+
+  const { createProduct } = useProductActions();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleCreateStore(values: StoreFormValues) {
+  async function handleCreateProduct(values: ProductFormValues) {
     try {
       setIsSubmitting(true);
-      await createStore(values);
-      router.replace("/");
+
+      await createProduct({
+        storeId,
+        name: values.name,
+        category: values.category,
+        price: values.price,
+        ...(values.imageUrl ? { imageUrl: values.imageUrl } : {}),
+      });
+
+      router.replace(`/stores/${storeId}`);
     } catch {
-      Alert.alert("Erro", "Não foi possível criar a loja.");
+      Alert.alert("Erro", "Não foi possível criar o produto.");
     } finally {
       setIsSubmitting(false);
     }
@@ -28,12 +39,15 @@ export default function NewStoreScreen() {
   return (
     <AppScreen>
       <View style={styles.container}>
-        <SectionHeader title="Nova loja" subtitle="Cadastre uma nova filial" />
+        <SectionHeader
+          title="Novo produto"
+          subtitle="Cadastre um item para esta loja"
+        />
 
-        <StoreForm
-          onSubmit={handleCreateStore}
+        <ProductForm
+          onSubmit={handleCreateProduct}
           isSubmitting={isSubmitting}
-          submitLabel="Criar loja"
+          submitLabel="Criar produto"
         />
       </View>
     </AppScreen>

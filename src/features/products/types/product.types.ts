@@ -10,7 +10,6 @@ export const PRODUCT_CATEGORIES = [
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
-
 export type ProductId = string;
 
 export type Product = {
@@ -19,7 +18,7 @@ export type Product = {
   name: string;
   category: ProductCategory;
   price: number;
-  imageUrl?: string | null;
+  imageUrl?: string | undefined;
   createdAt: string;
 };
 
@@ -28,7 +27,12 @@ export type CreateProductInput = {
   name: string;
   category: ProductCategory;
   price: number;
-  imageUrl?: string;
+  imageUrl?: string | undefined;
 };
 
-export type UpdateProductInput = Omit<CreateProductInput, "storeId">;
+export type UpdateProductInput = {
+  name: string;
+  category: ProductCategory;
+  price: number;
+  imageUrl?: string | undefined;
+};
