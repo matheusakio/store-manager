@@ -7,7 +7,7 @@ import { AppScreen } from "@/components/ui/app-screen";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { TextField } from "@/components/forms/text-field";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
+import { useStoreActions } from "@/features/schools/hooks/use-store-actions";
 import { theme } from "@/theme";
 
 export default function NewStoreScreen() {

@@ -10,13 +10,13 @@ import { HeroCard } from "@/components/ui/hero-card";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { SearchInput } from "@/components/ui/search-input";
+import { useAllProducts } from "@/features/classes/hooks/use-all-products";
+import { StoreListFilter } from "@/features/schools/components/store-list-filter";
+import { StoreCard } from "@/features/schools/components/store-card";
+import { useStoreActions } from "@/features/schools/hooks/use-store-actions";
+import { useStores } from "@/features/schools/hooks/use-stores";
 
-import { useAllProducts } from "@/features/products/hooks/use-all-products";
-import { StoreListFilter } from "@/features/stores/components/store-list-filter";
-import { StoreCard } from "@/features/stores/components/store-card";
-import { useStoreActions } from "@/features/stores/hooks/use-store-actions";
-import { useStores } from "@/features/stores/hooks/use-stores";
-import { mapStoresWithProductsCount } from "@/features/stores/utils/store.mappers";
+import { mapStoresWithProductsCount } from "@/features/schools/utils/store.mappers";
 import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 

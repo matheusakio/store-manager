@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ProductCategory } from "@/features/products/types/product.types";
+import type { ProductCategory } from "@/features/classes/types/product.types";
 
 type StoreListFilter = "all" | "with-products" | "empty";
 

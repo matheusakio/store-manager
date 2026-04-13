@@ -1,8 +1,8 @@
-import type { Product } from "@/features/products/types/product.types";
+import type { Product } from "@/features/classes/types/product.types";
 import type {
   Store,
   StoreWithProductsCount,
-} from "@/features/stores/types/store.types";
+} from "@/features/schools/types/store.types";
 
 export function mapStoresWithProductsCount(
   stores: Store[] = [],
