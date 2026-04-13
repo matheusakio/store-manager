@@ -16,9 +16,9 @@ import { SchoolListFilter } from "@/features/schools/components/SchoolListFilter
 import { SchoolCard } from "@/features/schools/components/SchoolCard";
 import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
 import { useSchools } from "@/features/schools/hooks/use-schools";
+import { useSchoolsUiStore } from "@/features/schools/store/schools-ui.store";
 import { mapSchoolsWithClassesCount } from "@/features/schools/utils/school.mappers";
 
-import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 
 export default function HomeScreen() {
@@ -39,10 +39,12 @@ export default function HomeScreen() {
 
   const { deleteSchool } = useSchoolActions();
 
-  const storeSearch = useAppStore((state) => state.storeSearch);
-  const setStoreSearch = useAppStore((state) => state.setStoreSearch);
-  const storeListFilter = useAppStore((state) => state.storeListFilter);
-  const setSchoolListFilter = useAppStore((state) => state.setSchoolListFilter);
+  const schoolSearch = useSchoolsUiStore((state) => state.schoolSearch);
+  const setSchoolSearch = useSchoolsUiStore((state) => state.setSchoolSearch);
+  const schoolListFilter = useSchoolsUiStore((state) => state.schoolListFilter);
+  const setSchoolListFilter = useSchoolsUiStore(
+    (state) => state.setSchoolListFilter,
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -56,7 +58,7 @@ export default function HomeScreen() {
   }, [schools, classes]);
 
   const filteredSchools = useMemo(() => {
-    const query = storeSearch.trim().toLowerCase();
+    const query = schoolSearch.trim().toLowerCase();
 
     return schoolsWithCount.filter((school) => {
       const matchesSearch =
@@ -65,13 +67,13 @@ export default function HomeScreen() {
         school.address.toLowerCase().includes(query);
 
       const matchesFilter =
-        storeListFilter === "all" ||
-        (storeListFilter === "with-products" && school.classesCount > 0) ||
-        (storeListFilter === "empty" && school.classesCount === 0);
+        schoolListFilter === "all" ||
+        (schoolListFilter === "with-classes" && school.classesCount > 0) ||
+        (schoolListFilter === "empty" && school.classesCount === 0);
 
       return matchesSearch && matchesFilter;
     });
-  }, [storeSearch, storeListFilter, schoolsWithCount]);
+  }, [schoolSearch, schoolListFilter, schoolsWithCount]);
 
   async function handleDeleteSchool(schoolId: string) {
     await deleteSchool(schoolId);
@@ -116,13 +118,13 @@ export default function HomeScreen() {
             />
 
             <SearchInput
-              value={storeSearch}
-              onChangeText={setStoreSearch}
+              value={schoolSearch}
+              onChangeText={setSchoolSearch}
               placeholder="Buscar por nome ou endereço"
             />
 
             <SchoolListFilter
-              value={storeListFilter}
+              value={schoolListFilter}
               onChange={setSchoolListFilter}
             />
 

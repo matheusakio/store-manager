@@ -14,9 +14,9 @@ import { ShiftFilter } from "@/features/classes/components/ShiftFilter";
 import { ClassCard } from "@/features/classes/components/ClassCard";
 import { useClassActions } from "@/features/classes/hooks/use-class-actions";
 import { useClasses } from "@/features/classes/hooks/use-classes";
+import { useClassesUiStore } from "@/features/classes/store/classes-ui.store";
 import { useSchools } from "@/features/schools/hooks/use-schools";
 
-import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 
 export default function SchoolDetailsScreen() {
@@ -28,10 +28,10 @@ export default function SchoolDetailsScreen() {
   const { getSchoolById, isLoading: isLoadingSchool } = useSchools();
   const { deleteSchoolClass } = useClassActions();
 
-  const productSearch = useAppStore((state) => state.productSearch);
-  const selectedCategory = useAppStore((state) => state.selectedCategory);
-  const setProductSearch = useAppStore((state) => state.setProductSearch);
-  const setSelectedCategory = useAppStore((state) => state.setSelectedCategory);
+  const classSearch = useClassesUiStore((state) => state.classSearch);
+  const selectedShift = useClassesUiStore((state) => state.selectedShift);
+  const setClassSearch = useClassesUiStore((state) => state.setClassSearch);
+  const setSelectedShift = useClassesUiStore((state) => state.setSelectedShift);
 
   const school = useMemo(
     () => getSchoolById(schoolId),
@@ -39,8 +39,8 @@ export default function SchoolDetailsScreen() {
   );
 
   const filteredClasses = useMemo(() => {
-    return (classes ?? []).filter((item) => {
-      const query = productSearch.trim().toLowerCase();
+    return classes.filter((item) => {
+      const query = classSearch.trim().toLowerCase();
 
       const matchesSearch =
         item.name.toLowerCase().includes(query) ||
@@ -48,11 +48,11 @@ export default function SchoolDetailsScreen() {
         item.schoolYear.toLowerCase().includes(query);
 
       const matchesShift =
-        selectedCategory === "Todos" || item.shift === selectedCategory;
+        selectedShift === "Todos" || item.shift === selectedShift;
 
       return matchesSearch && matchesShift;
     });
-  }, [productSearch, classes, selectedCategory]);
+  }, [classSearch, classes, selectedShift]);
 
   async function handleDeleteClass(classId: string) {
     await deleteSchoolClass(classId);
@@ -94,15 +94,12 @@ export default function SchoolDetailsScreen() {
             />
 
             <SearchInput
-              value={productSearch}
-              onChangeText={setProductSearch}
+              value={classSearch}
+              onChangeText={setClassSearch}
               placeholder="Buscar turma, turno ou ano letivo"
             />
 
-            <ShiftFilter
-              value={selectedCategory}
-              onChange={setSelectedCategory}
-            />
+            <ShiftFilter value={selectedShift} onChange={setSelectedShift} />
 
             <PrimaryButton
               label="Cadastrar nova turma"

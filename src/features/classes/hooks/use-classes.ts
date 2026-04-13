@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import { classesRepository } from "../services/classes.repository";
 import type { SchoolClass } from "../types/class.types";
-import { useAppStore } from "@/store/app-store";
+import { useClassesUiStore } from "../store/classes-ui.store";
 
 export function useClasses(schoolId: string) {
   const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const resetProductFilters = useAppStore((state) => state.resetProductFilters);
+  const resetClassFilters = useClassesUiStore(
+    (state) => state.resetClassFilters,
+  );
 
   const fetchClasses = useCallback(async () => {
     try {
@@ -26,9 +28,9 @@ export function useClasses(schoolId: string) {
   }, [schoolId]);
 
   useEffect(() => {
-    resetProductFilters();
+    resetClassFilters();
     fetchClasses();
-  }, [fetchClasses, resetProductFilters]);
+  }, [fetchClasses, resetClassFilters]);
 
   return {
     classes,
