@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import {
   PRODUCT_CATEGORIES,
   type ProductCategory,
-} from "../types/product.types";
+} from "../types/class.types";
 
 type CategoryFilterValue = ProductCategory | "Todos";
 

@@ -8,7 +8,7 @@ import {
 import {
   PRODUCT_CATEGORIES,
   type ProductCategory,
-} from "../types/product.types";
+} from "../types/class.types";
 
 type CategorySelectProps = {
   value: ProductCategory | "";

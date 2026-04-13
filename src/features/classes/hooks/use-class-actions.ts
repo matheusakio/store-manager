@@ -1,8 +1,8 @@
-import { productsRepository } from "../services/products.repository";
+import { productsRepository } from "../services/classes.repository";
 import type {
   CreateProductInput,
   UpdateProductInput,
-} from "../types/product.types";
+} from "../types/class.types";
 
 export function useProductActions() {
   async function createProduct(input: CreateProductInput) {

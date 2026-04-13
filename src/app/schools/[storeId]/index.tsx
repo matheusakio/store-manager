@@ -10,11 +10,11 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { SearchInput } from "@/components/ui/search-input";
 
-import { CategoryFilter } from "@/features/classes/components/category-filter";
-import { ProductCard } from "@/features/classes/components/product-card";
-import { useProductActions } from "@/features/classes/hooks/use-product-actions";
-import { useProducts } from "@/features/classes/hooks/use-products";
-import { useStores } from "@/features/schools/hooks/use-stores";
+import { CategoryFilter } from "@/features/classes/components/shift-filter";
+import { ProductCard } from "@/features/classes/components/class-card";
+import { useProductActions } from "@/features/classes/hooks/use-class-actions";
+import { useProducts } from "@/features/classes/hooks/use-classes";
+import { useStores } from "@/features/schools/hooks/use-schools";
 import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 

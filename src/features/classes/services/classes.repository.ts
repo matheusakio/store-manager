@@ -3,7 +3,7 @@ import type {
   Product,
   CreateProductInput,
   UpdateProductInput,
-} from "../types/product.types";
+} from "../types/class.types";
 
 export const productsRepository = {
   listByStore: async (storeId: string): Promise<Product[]> => {

@@ -1,5 +1,5 @@
 import { theme } from "@/theme";
-import type { ProductCategory } from "../types/product.types";
+import type { ProductCategory } from "../types/class.types";
 
 export function getCategoryAccent(category: ProductCategory) {
   switch (category) {

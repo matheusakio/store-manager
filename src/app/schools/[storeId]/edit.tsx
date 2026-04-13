@@ -7,9 +7,9 @@ import { AppScreen } from "@/components/ui/app-screen";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { StoreForm } from "@/features/schools/components/store-form";
-import { useStoreActions } from "@/features/schools/hooks/use-store-actions";
-import { useStores } from "@/features/schools/hooks/use-stores";
+import { StoreForm } from "@/features/schools/components/school-form";
+import { useStoreActions } from "@/features/schools/hooks/use-school-actions";
+import { useStores } from "@/features/schools/hooks/use-schools";
 import type { StoreFormValues } from "@/lib/validations";
 
 import { theme } from "@/theme";

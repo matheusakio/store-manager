@@ -1,5 +1,5 @@
-import { storesRepository } from "../services/stores.repository";
-import type { CreateStoreInput, UpdateStoreInput } from "../types/store.types";
+import { storesRepository } from "../services/schools.repository";
+import { CreateStoreInput, UpdateStoreInput } from "../types/school.types";
 
 export function useStoreActions() {
   async function createStore(input: CreateStoreInput) {

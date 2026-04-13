@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/services/api/client";
-import type { Product } from "../types/product.types";
+import type { Product } from "../types/class.types";
 
 export function useAllProducts() {
   const [products, setProducts] = useState<Product[]>([]);

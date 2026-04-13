@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { storesRepository } from "../services/stores.repository";
-import type { Store } from "../types/store.types";
+import { Store } from "../types/school.types";
+import { storesRepository } from "../services/schools.repository";
 
 export function useStores() {
   const [stores, setStores] = useState<Store[]>([]);

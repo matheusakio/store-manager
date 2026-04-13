@@ -1,4 +1,4 @@
-import type { StoreId } from "@/features/schools/types/school.types";
+import type { StoreId } from "@/features/stores/types/school.types";
 
 export const PRODUCT_CATEGORIES = [
   "Eletrônicos",

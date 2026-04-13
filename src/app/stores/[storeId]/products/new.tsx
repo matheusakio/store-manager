@@ -6,8 +6,8 @@ import { AppHeader } from "@/components/ui/app-header";
 import { AppScreen } from "@/components/ui/app-screen";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
 
-import { useProductActions } from "@/features/classes/hooks/use-product-actions";
-import { ProductForm } from "@/features/classes/components/product-form";
+import { useProductActions } from "@/features/classes/hooks/use-class-actions";
+import { ProductForm } from "@/features/classes/components/class-form";
 import type { ProductFormValues } from "@/lib/validations";
 import { theme } from "@/theme";
 

@@ -9,7 +9,7 @@ import {
 
 import { confirmDelete } from "@/components/feedback/app-alert";
 import { theme } from "@/theme";
-import type { StoreWithProductsCount } from "../types/store.types";
+import { StoreWithProductsCount } from "@/features/schools/types/school.types";
 
 type StoreCardProps = {
   store: StoreWithProductsCount;

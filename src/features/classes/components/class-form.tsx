@@ -11,7 +11,7 @@ import {
   type ProductFormInput,
   type ProductFormValues,
 } from "@/lib/validations";
-import { CategorySelect } from "./category-select";
+import { CategorySelect } from "./shift-select";
 import { theme } from "@/theme";
 
 type ProductFormProps = {

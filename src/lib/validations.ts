@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PRODUCT_CATEGORIES } from "@/features/classes/types/product.types";
+import { PRODUCT_CATEGORIES } from "@/features/classes/types/class.types";
 
 export const storeSchema = z.object({
   name: z.string().min(2, "Informe o nome da loja").trim(),

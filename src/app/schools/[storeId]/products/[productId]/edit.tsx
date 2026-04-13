@@ -12,9 +12,9 @@ import { showError, showSuccess } from "@/components/feedback/app-alert";
 import type { ProductFormValues } from "@/lib/validations";
 import { numberToBRLInput } from "@/lib/currency";
 import { theme } from "@/theme";
-import { useProducts } from "@/features/classes/hooks/use-products";
-import { useProductActions } from "@/features/classes/hooks/use-product-actions";
-import { ProductForm } from "@/features/classes/components/product-form";
+import { useProducts } from "@/features/classes/hooks/use-classes";
+import { useProductActions } from "@/features/classes/hooks/use-class-actions";
+import { ProductForm } from "@/features/classes/components/class-form";
 
 export default function EditProductScreen() {
   const router = useRouter();

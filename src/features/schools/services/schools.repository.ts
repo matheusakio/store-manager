@@ -1,9 +1,9 @@
 import { api } from "@/services/api/client";
-import type {
-  Store,
+import {
   CreateStoreInput,
+  Store,
   UpdateStoreInput,
-} from "../types/store.types";
+} from "../types/school.types";
 
 export const storesRepository = {
   list: async (): Promise<Store[]> => {

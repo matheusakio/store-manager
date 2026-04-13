@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { productsRepository } from "../services/products.repository";
-import type { Product } from "../types/product.types";
+import { productsRepository } from "../services/classes.repository";
+import type { Product } from "../types/class.types";
 import { useAppStore } from "@/store/app-store";
 
 export function useProducts(storeId: string) {

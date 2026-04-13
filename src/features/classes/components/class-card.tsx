@@ -3,8 +3,8 @@ import { Image } from "expo-image";
 import { Pencil, Tag, Trash2, Image as ImageIcon } from "lucide-react-native";
 
 import { theme } from "@/theme";
-import type { Product } from "../types/product.types";
-import { getCategoryAccent } from "../utils/product.mappers";
+import type { Product } from "../types/class.types";
+import { getCategoryAccent } from "../utils/class.mappers";
 import { confirmDelete } from "@/components/feedback/app-alert";
 
 type ProductCardProps = {
