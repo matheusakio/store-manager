@@ -23,7 +23,7 @@ function generateId() {
 
 const MOCK_ERRORS = {
   stores: false,
-  createStore: false,
+  createStore: true,
   updateStore: false,
   deleteStore: false,
 
