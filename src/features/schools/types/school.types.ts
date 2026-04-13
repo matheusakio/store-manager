@@ -14,6 +14,6 @@ export type CreateSchoolInput = {
 
 export type UpdateSchoolInput = CreateSchoolInput;
 
-export type SchoolWithProductsCount = School & {
-  productsCount: number;
+export type SchoolWithClassesCount = School & {
+  classesCount: number;
 };

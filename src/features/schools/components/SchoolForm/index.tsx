@@ -1,10 +1,12 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
 import { Button, ButtonText } from "@/components/ui/button";
-import { TextField } from "@/components/forms/text-field";
-import { storeSchema, type SchoolFormValues } from "@/lib/validations";
+import { TextField } from "@/components/forms/TextField";
+import { schoolFormSchema, type SchoolFormValues } from "@/lib/validations";
+
+import { styles } from "./styles";
 
 type SchoolFormProps = {
   defaultValues?: SchoolFormValues;
@@ -24,7 +26,7 @@ export function SchoolForm({
     handleSubmit,
     formState: { errors },
   } = useForm<SchoolFormValues>({
-    resolver: zodResolver(storeSchema),
+    resolver: zodResolver(schoolFormSchema),
     defaultValues: defaultValues ?? {
       name: "",
       address: "",
@@ -38,10 +40,10 @@ export function SchoolForm({
         name="name"
         render={({ field: { value, onChange } }) => (
           <TextField
-            label="Nome da loja"
+            label="Nome da escola"
             value={value}
             onChangeText={onChange}
-            placeholder="Ex: Loja Centro"
+            placeholder="Ex: Escola Municipal Centro"
             error={errors.name?.message}
           />
         )}
@@ -55,7 +57,7 @@ export function SchoolForm({
             label="Endereço"
             value={value}
             onChangeText={onChange}
-            placeholder="Ex: Centro - São Paulo"
+            placeholder="Ex: Centro - Goiânia"
             error={errors.address?.message}
           />
         )}
@@ -67,9 +69,3 @@ export function SchoolForm({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    gap: 16,
-  },
-});

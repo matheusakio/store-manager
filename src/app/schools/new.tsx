@@ -2,10 +2,10 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import { AppHeader } from "@/components/ui/app-header";
-import { AppScreen } from "@/components/ui/app-screen";
-import { PrimaryButton } from "@/components/ui/primary-button";
-import { TextField } from "@/components/forms/text-field";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { AppScreen } from "@/components/ui/AppScreen";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { TextField } from "@/components/forms/TextField";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
 import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
 import { theme } from "@/theme";

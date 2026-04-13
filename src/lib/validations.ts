@@ -20,7 +20,7 @@ export const classFormSchema = z.object({
   name: requiredText("Informe o nome da turma"),
   category: classShiftInputSchema,
   price: requiredText("Informe o ano letivo"),
-  imageUri: z.string().default(""),
+  imageUri: z.string(),
 });
 
 export type ClassFormInput = {
@@ -30,4 +30,9 @@ export type ClassFormInput = {
   imageUri: string;
 };
 
-export type ProductFormValues = z.output<typeof classFormSchema>;
+export type ProductFormValues = {
+  name: string;
+  category: (typeof CLASS_SHIFTS)[number];
+  price: string;
+  imageUri: string;
+};

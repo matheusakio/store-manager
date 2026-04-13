@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "@/theme";
+import { styles } from "./styles";
 
 export function AppScreen({ children }: PropsWithChildren) {
   return (
@@ -18,16 +19,3 @@ export function AppScreen({ children }: PropsWithChildren) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  gradient: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    padding: theme.spacing.lg,
-  },
-});

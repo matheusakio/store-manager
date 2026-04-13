@@ -1,22 +1,22 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 
-import { AppHeader } from "@/components/ui/app-header";
-import { AppScreen } from "@/components/ui/app-screen";
-import { EmptyState } from "@/components/ui/empty-state";
-import { ErrorState } from "@/components/ui/error-state";
-import { HeroCard } from "@/components/ui/hero-card";
-import { LoadingState } from "@/components/ui/loading-state";
-import { PrimaryButton } from "@/components/ui/primary-button";
-import { SearchInput } from "@/components/ui/search-input";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { AppScreen } from "@/components/ui/AppScreen";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { HeroCard } from "@/components/ui/HeroCard";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { SearchInput } from "@/components/ui/SearchInput";
 
 import { useAllClasses } from "@/features/classes/hooks/use-all-classes";
-import { SchoolListFilter } from "@/features/schools/components/school-list-filter";
-import { SchoolCard } from "@/features/schools/components/school-card";
+import { SchoolListFilter } from "@/features/schools/components/SchoolListFilter";
+import { SchoolCard } from "@/features/schools/components/SchoolCard";
 import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
 import { useSchools } from "@/features/schools/hooks/use-schools";
-import { mapSchoolsWithProductsCount } from "@/features/schools/utils/school.mappers";
+import { mapSchoolsWithClassesCount } from "@/features/schools/utils/school.mappers";
 
 import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
@@ -31,7 +31,11 @@ export default function HomeScreen() {
     refetch,
   } = useSchools();
 
-  const { classes = [], isLoading: isLoadingClasses } = useAllClasses();
+  const {
+    classes = [],
+    isLoading: isLoadingClasses,
+    refetch: refetchClasses,
+  } = useAllClasses();
 
   const { deleteSchool } = useSchoolActions();
 
@@ -40,8 +44,15 @@ export default function HomeScreen() {
   const storeListFilter = useAppStore((state) => state.storeListFilter);
   const setSchoolListFilter = useAppStore((state) => state.setSchoolListFilter);
 
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+      refetchClasses();
+    }, [refetch, refetchClasses]),
+  );
+
   const schoolsWithCount = useMemo(() => {
-    return mapSchoolsWithProductsCount(schools ?? [], classes ?? []);
+    return mapSchoolsWithClassesCount(schools, classes);
   }, [schools, classes]);
 
   const filteredSchools = useMemo(() => {
@@ -55,8 +66,8 @@ export default function HomeScreen() {
 
       const matchesFilter =
         storeListFilter === "all" ||
-        (storeListFilter === "with-products" && school.productsCount > 0) ||
-        (storeListFilter === "empty" && school.productsCount === 0);
+        (storeListFilter === "with-products" && school.classesCount > 0) ||
+        (storeListFilter === "empty" && school.classesCount === 0);
 
       return matchesSearch && matchesFilter;
     });
@@ -65,6 +76,7 @@ export default function HomeScreen() {
   async function handleDeleteSchool(schoolId: string) {
     await deleteSchool(schoolId);
     await refetch();
+    await refetchClasses();
   }
 
   if (isLoadingSchools || isLoadingClasses) {

@@ -1,15 +1,17 @@
 import type { SchoolClass } from "@/features/classes/types/class.types";
 import type {
   School,
-  SchoolWithProductsCount,
+  SchoolWithClassesCount,
 } from "@/features/schools/types/school.types";
 
-export function mapSchoolsWithProductsCount(
+export function mapSchoolsWithClassesCount(
   schools: School[] = [],
   classes: SchoolClass[] = [],
-): SchoolWithProductsCount[] {
-  return schools.map((school) => ({
+): SchoolWithClassesCount[] {
+  return schools.map((school: School) => ({
     ...school,
-    productsCount: classes.filter((item) => item.schoolId === school.id).length,
+    classesCount: classes.filter(
+      (item: SchoolClass) => item.schoolId === school.id,
+    ).length,
   }));
 }

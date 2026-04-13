@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { theme } from "@/theme";
+import { styles } from "./styles";
 
 type PrimaryButtonProps = {
   label: string;
@@ -22,18 +23,3 @@ export function PrimaryButton({ label, onPress, style }: PrimaryButtonProps) {
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    height: 54,
-    borderRadius: theme.radius.lg,
-    alignItems: "center",
-    justifyContent: "center",
-    ...theme.shadow.card,
-  },
-  text: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "800",
-  },
-});

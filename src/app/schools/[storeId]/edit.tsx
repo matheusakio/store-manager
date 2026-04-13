@@ -2,12 +2,12 @@ import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AppHeader } from "@/components/ui/app-header";
-import { AppScreen } from "@/components/ui/app-screen";
-import { ErrorState } from "@/components/ui/error-state";
-import { LoadingState } from "@/components/ui/loading-state";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { AppScreen } from "@/components/ui/AppScreen";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { LoadingState } from "@/components/ui/LoadingState";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { SchoolForm } from "@/features/schools/components/school-form";
+import { SchoolForm } from "@/features/schools/components/SchoolForm";
 import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
 import { useSchools } from "@/features/schools/hooks/use-schools";
 import type { SchoolFormValues } from "@/lib/validations";

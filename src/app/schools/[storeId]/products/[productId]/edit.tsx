@@ -2,14 +2,14 @@ import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AppHeader } from "@/components/ui/app-header";
-import { AppScreen } from "@/components/ui/app-screen";
-import { ErrorState } from "@/components/ui/error-state";
-import { LoadingState } from "@/components/ui/loading-state";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { AppScreen } from "@/components/ui/AppScreen";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { LoadingState } from "@/components/ui/LoadingState";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
 
 import type { ProductFormValues } from "@/lib/validations";
-import { ClassForm } from "@/features/classes/components/class-form";
+import { ClassForm } from "@/features/classes/components/ClassForm";
 import { useClasses } from "@/features/classes/hooks/use-classes";
 import { useClassActions } from "@/features/classes/hooks/use-class-actions";
 import { theme } from "@/theme";

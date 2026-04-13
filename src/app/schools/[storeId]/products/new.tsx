@@ -2,11 +2,11 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AppHeader } from "@/components/ui/app-header";
-import { AppScreen } from "@/components/ui/app-screen";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { AppScreen } from "@/components/ui/AppScreen";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
 
-import { ClassForm } from "@/features/classes/components/class-form";
+import { ClassForm } from "@/features/classes/components/ClassForm";
 import { useClassActions } from "@/features/classes/hooks/use-class-actions";
 import type { ProductFormValues } from "@/lib/validations";
 import { theme } from "@/theme";

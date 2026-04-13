@@ -1,294 +1,194 @@
 import { createServer, Model, Response } from "miragejs";
 
-type StoreRecord = {
+type School = {
   id: string;
   name: string;
   address: string;
   createdAt: string;
 };
 
-type ProductRecord = {
+type SchoolClass = {
   id: string;
-  storeId: string;
+  schoolId: string;
   name: string;
-  category: string;
-  price: number;
-  imageUri?: string | undefined;
+  shift: "Matutino" | "Vespertino" | "Noturno" | "Integral";
+  schoolYear: string;
   createdAt: string;
 };
+
+function nowIso() {
+  return new Date().toISOString();
+}
 
 function generateId() {
   return `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 }
 
-const MOCK_ERRORS = {
-  stores: false,
-  createStore: true,
-  updateStore: false,
-  deleteStore: false,
-
-  products: false,
-  createProduct: false,
-  updateProduct: false,
-  deleteProduct: false,
-};
-
-function simulateError(
-  enabled: boolean,
-  status = 400,
-  message = "Erro simulado",
-) {
-  if (!enabled) return null;
-
-  return new Response(status, {}, { message });
-}
-
-async function simulateErrorWithDelay(
-  enabled: boolean,
-  delay = 600,
-  status = 400,
-  message = "Erro simulado",
-) {
-  if (!enabled) return null;
-
-  await new Promise((resolve) => setTimeout(resolve, delay));
-
-  return new Response(status, {}, { message });
-}
-
 export function makeServer() {
   return createServer({
     models: {
-      store: Model,
-      product: Model,
+      school: Model,
+      schoolClass: Model,
     },
 
     seeds(server) {
-      server.create("store", {
+      server.create("school", {
         id: "1",
-        name: "Loja Centro",
-        address: "Centro - São Paulo",
-        createdAt: new Date().toISOString(),
+        name: "Escola Municipal Centro",
+        address: "Centro - Goiânia/GO",
+        createdAt: nowIso(),
       });
 
-      server.create("store", {
+      server.create("school", {
         id: "2",
-        name: "Loja Shopping",
-        address: "Shopping Norte - São Paulo",
-        createdAt: new Date().toISOString(),
+        name: "Escola Estadual Jardim das Flores",
+        address: "Jardim das Flores - Anápolis/GO",
+        createdAt: nowIso(),
       });
 
-      server.create("product", {
+      server.create("schoolClass", {
         id: "1",
-        storeId: "1",
-        name: "Camiseta Premium",
-        category: "Roupas",
-        price: 129.9,
-        createdAt: new Date().toISOString(),
+        schoolId: "1",
+        name: "5º Ano A",
+        shift: "Matutino",
+        schoolYear: "2026",
+        createdAt: nowIso(),
       });
 
-      server.create("product", {
+      server.create("schoolClass", {
         id: "2",
-        storeId: "1",
-        name: "Fone Bluetooth",
-        category: "Eletrônicos",
-        price: 299.9,
-        createdAt: new Date().toISOString(),
+        schoolId: "1",
+        name: "6º Ano B",
+        shift: "Vespertino",
+        schoolYear: "2026",
+        createdAt: nowIso(),
+      });
+
+      server.create("schoolClass", {
+        id: "3",
+        schoolId: "2",
+        name: "1º Ano Ensino Médio",
+        shift: "Noturno",
+        schoolYear: "2026",
+        createdAt: nowIso(),
       });
     },
 
     routes() {
       this.namespace = "api";
 
-      this.get("/stores", async (schema) => {
-        const error = await simulateErrorWithDelay(
-          MOCK_ERRORS.stores,
-          800,
-          400,
-          "Erro ao listar lojas",
-        );
-        if (error) return error;
-
-        const stores = schema
-          .all("store")
-          .models.map((model) => model.attrs as StoreRecord);
-
-        return { stores };
+      this.get("/schools", (schema: any) => {
+        const schools = schema
+          .all("school")
+          .models.map((item: any) => item.attrs);
+        return { schools };
       });
 
-      this.post("/stores", (schema, request) => {
-        const error = simulateError(
-          MOCK_ERRORS.createStore,
-          400,
-          "Erro ao criar loja",
-        );
-        if (error) return error;
-
+      this.post("/schools", (schema: any, request: any) => {
         const attrs = JSON.parse(request.requestBody) as Omit<
-          StoreRecord,
+          School,
           "id" | "createdAt"
         >;
 
-        const store = schema.create("store", {
+        const school = schema.create("school", {
           id: generateId(),
           ...attrs,
-          createdAt: new Date().toISOString(),
+          createdAt: nowIso(),
         });
 
-        return store.attrs;
+        return school.attrs;
       });
 
-      this.put("/stores/:id", (schema, request) => {
-        const error = simulateError(
-          MOCK_ERRORS.updateStore,
-          400,
-          "Erro ao atualizar loja",
-        );
-        if (error) return error;
+      this.put("/schools/:id", (schema: any, request: any) => {
+        const id = String(request.params.id);
+        const attrs = JSON.parse(request.requestBody) as Partial<School>;
+        const school = schema.find("school", id);
 
-        const id = request.params.id;
-
-        if (!id) {
-          return new Response(400, {}, { message: "ID da loja inválido." });
+        if (!school) {
+          return new Response(404, {}, { message: "Escola não encontrada." });
         }
 
-        const attrs = JSON.parse(request.requestBody) as Partial<StoreRecord>;
-        const store = schema.find("store", id);
-
-        if (!store) {
-          return new Response(404, {}, { message: "Loja não encontrada." });
-        }
-
-        store.update(attrs);
-        return store.attrs;
+        school.update(attrs);
+        return school.attrs;
       });
 
-      this.delete("/stores/:id", (schema, request) => {
-        const error = simulateError(
-          MOCK_ERRORS.deleteStore,
-          400,
-          "Erro ao deletar loja",
-        );
-        if (error) return error;
+      this.delete("/schools/:id", (schema: any, request: any) => {
+        const id = String(request.params.id);
+        const school = schema.find("school", id);
 
-        const id = request.params.id;
-
-        if (!id) {
-          return new Response(400, {}, { message: "ID da loja inválido." });
+        if (!school) {
+          return new Response(404, {}, { message: "Escola não encontrada." });
         }
 
-        const store = schema.find("store", id);
+        const classes = schema.all("schoolClass").models.filter((item: any) => {
+          return String(item.attrs.schoolId) === id;
+        });
 
-        if (!store) {
-          return new Response(404, {}, { message: "Loja não encontrada." });
-        }
-
-        const relatedProducts = schema
-          .all("product")
-          .models.filter(
-            (model) => (model.attrs as ProductRecord).storeId === id,
-          );
-
-        relatedProducts.forEach((product) => product.destroy());
-        store.destroy();
+        classes.forEach((item: any) => item.destroy());
+        school.destroy();
 
         return new Response(204);
       });
 
-      /**
-       * PRODUCTS
-       */
+      this.get("/classes", (schema: any, request: any) => {
+        const schoolId = request.queryParams.schoolId as string | undefined;
 
-      this.get("/products", async (schema, request) => {
-        const error = await simulateErrorWithDelay(
-          MOCK_ERRORS.products,
-          700,
-          400,
-          "Erro ao listar produtos",
-        );
-        if (error) return error;
+        let classes = schema
+          .all("schoolClass")
+          .models.map((item: any) => item.attrs);
 
-        const storeId = request.queryParams.storeId;
+        if (schoolId) {
+          classes = classes.filter(
+            (item: any) => String(item.schoolId) === String(schoolId),
+          );
+        }
 
-        const products = schema
-          .all("product")
-          .models.map((model) => model.attrs as ProductRecord)
-          .filter((product) => {
-            if (!storeId) return true;
-            return product.storeId === String(storeId);
-          });
-
-        return { products };
+        return { classes };
       });
 
-      this.post("/products", (schema, request) => {
-        const error = simulateError(
-          MOCK_ERRORS.createProduct,
-          400,
-          "Erro ao criar produto",
-        );
-        if (error) return error;
-
+      this.post("/classes", (schema: any, request: any) => {
         const attrs = JSON.parse(request.requestBody) as Omit<
-          ProductRecord,
+          SchoolClass,
           "id" | "createdAt"
         >;
 
-        const product = schema.create("product", {
+        const school = schema.find("school", String(attrs.schoolId));
+
+        if (!school) {
+          return new Response(404, {}, { message: "Escola não encontrada." });
+        }
+
+        const schoolClass = schema.create("schoolClass", {
           id: generateId(),
           ...attrs,
-          createdAt: new Date().toISOString(),
+          createdAt: nowIso(),
         });
 
-        return product.attrs;
+        return schoolClass.attrs;
       });
 
-      this.put("/products/:id", (schema, request) => {
-        const error = simulateError(
-          MOCK_ERRORS.updateProduct,
-          400,
-          "Erro ao atualizar produto",
-        );
-        if (error) return error;
+      this.put("/classes/:id", (schema: any, request: any) => {
+        const id = String(request.params.id);
+        const attrs = JSON.parse(request.requestBody) as Partial<SchoolClass>;
+        const schoolClass = schema.find("schoolClass", id);
 
-        const id = request.params.id;
-
-        if (!id) {
-          return new Response(400, {}, { message: "ID do produto inválido." });
+        if (!schoolClass) {
+          return new Response(404, {}, { message: "Turma não encontrada." });
         }
 
-        const attrs = JSON.parse(request.requestBody) as Partial<ProductRecord>;
-        const product = schema.find("product", id);
-
-        if (!product) {
-          return new Response(404, {}, { message: "Produto não encontrado." });
-        }
-
-        product.update(attrs);
-        return product.attrs;
+        schoolClass.update(attrs);
+        return schoolClass.attrs;
       });
 
-      this.delete("/products/:id", (schema, request) => {
-        const error = simulateError(
-          MOCK_ERRORS.deleteProduct,
-          400,
-          "Erro ao deletar produto",
-        );
-        if (error) return error;
+      this.delete("/classes/:id", (schema: any, request: any) => {
+        const id = String(request.params.id);
+        const schoolClass = schema.find("schoolClass", id);
 
-        const id = request.params.id;
-
-        if (!id) {
-          return new Response(400, {}, { message: "ID do produto inválido." });
+        if (!schoolClass) {
+          return new Response(404, {}, { message: "Turma não encontrada." });
         }
 
-        const product = schema.find("product", id);
-
-        if (!product) {
-          return new Response(404, {}, { message: "Produto não encontrado." });
-        }
-
-        product.destroy();
+        schoolClass.destroy();
         return new Response(204);
       });
 

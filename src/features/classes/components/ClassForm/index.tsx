@@ -1,18 +1,17 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
 import { Button, ButtonText } from "@/components/ui/button";
-import { TextField } from "@/components/forms/text-field";
-
+import { TextField } from "@/components/forms/TextField";
 import {
   classFormSchema,
   type ClassFormInput,
   type ProductFormValues,
 } from "@/lib/validations";
 
-import { ShiftSelect } from "./shift-select";
-import { theme } from "@/theme";
+import { styles } from "./styles";
+import { ShiftSelect } from "../ShiftSelect";
 
 type ClassFormProps = {
   defaultValues?: ClassFormInput;
@@ -31,7 +30,7 @@ export function ClassForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ClassFormInput>({
+  } = useForm<ClassFormInput, unknown, ProductFormValues>({
     resolver: zodResolver(classFormSchema),
     defaultValues: defaultValues ?? {
       name: "",
@@ -89,9 +88,3 @@ export function ClassForm({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    gap: theme.spacing.lg,
-  },
-});

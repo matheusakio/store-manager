@@ -2,16 +2,16 @@ import { useMemo } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { AppHeader } from "@/components/ui/app-header";
-import { AppScreen } from "@/components/ui/app-screen";
-import { EmptyState } from "@/components/ui/empty-state";
-import { ErrorState } from "@/components/ui/error-state";
-import { LoadingState } from "@/components/ui/loading-state";
-import { PrimaryButton } from "@/components/ui/primary-button";
-import { SearchInput } from "@/components/ui/search-input";
+import { AppHeader } from "@/components/ui/AppHeader";
+import { AppScreen } from "@/components/ui/AppScreen";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { SearchInput } from "@/components/ui/SearchInput";
 
-import { ShiftFilter } from "@/features/classes/components/shift-filter";
-import { ClassCard } from "@/features/classes/components/class-card";
+import { ShiftFilter } from "@/features/classes/components/ShiftFilter";
+import { ClassCard } from "@/features/classes/components/ClassCard";
 import { useClassActions } from "@/features/classes/hooks/use-class-actions";
 import { useClasses } from "@/features/classes/hooks/use-classes";
 import { useSchools } from "@/features/schools/hooks/use-schools";
