@@ -1,16 +1,15 @@
-import type { Product } from "@/features/classes/types/class.types";
+import type { SchoolClass } from "@/features/classes/types/class.types";
 import type {
-  Store,
-  StoreWithProductsCount,
+  School,
+  SchoolWithProductsCount,
 } from "@/features/schools/types/school.types";
 
-export function mapStoresWithProductsCount(
-  stores: Store[] = [],
-  products: Product[] = [],
-): StoreWithProductsCount[] {
-  return stores.map((store) => ({
-    ...store,
-    productsCount: products.filter((product) => product.storeId === store.id)
-      .length,
+export function mapSchoolsWithProductsCount(
+  schools: School[] = [],
+  classes: SchoolClass[] = [],
+): SchoolWithProductsCount[] {
+  return schools.map((school) => ({
+    ...school,
+    productsCount: classes.filter((item) => item.schoolId === school.id).length,
   }));
 }

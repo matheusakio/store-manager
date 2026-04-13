@@ -7,35 +7,37 @@ import { AppScreen } from "@/components/ui/app-screen";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { StoreForm } from "@/features/schools/components/school-form";
-import { useStoreActions } from "@/features/schools/hooks/use-school-actions";
-import { useStores } from "@/features/schools/hooks/use-schools";
-import type { StoreFormValues } from "@/lib/validations";
-
+import { SchoolForm } from "@/features/schools/components/school-form";
+import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
+import { useSchools } from "@/features/schools/hooks/use-schools";
+import type { SchoolFormValues } from "@/lib/validations";
 import { theme } from "@/theme";
 
-export default function EditStoreScreen() {
+export default function EditSchoolScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ storeId: string }>();
-  const storeId = String(params.storeId);
+  const schoolId = String(params.storeId);
 
-  const { isLoading, error, getStoreById, refetch } = useStores();
-  const { updateStore } = useStoreActions();
+  const { isLoading, error, getSchoolById, refetch } = useSchools();
+  const { updateSchool } = useSchoolActions();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const store = useMemo(() => getStoreById(storeId), [getStoreById, storeId]);
+  const school = useMemo(
+    () => getSchoolById(schoolId),
+    [getSchoolById, schoolId],
+  );
 
-  async function handleUpdateStore(values: StoreFormValues) {
+  async function handleUpdateSchool(values: SchoolFormValues) {
     try {
       setIsSubmitting(true);
 
-      await updateStore(storeId, values);
+      await updateSchool(schoolId, values);
 
-      showSuccess("Loja atualizada com sucesso.");
+      showSuccess("Escola atualizada com sucesso.");
       router.replace("/");
     } catch {
-      showError("Não foi possível atualizar a loja.");
+      showError("Não foi possível atualizar a escola.");
     } finally {
       setIsSubmitting(false);
     }
@@ -44,16 +46,16 @@ export default function EditStoreScreen() {
   if (isLoading) {
     return (
       <AppScreen>
-        <LoadingState label="Carregando loja..." />
+        <LoadingState label="Carregando escola..." />
       </AppScreen>
     );
   }
 
-  if (error || !store) {
+  if (error || !school) {
     return (
       <AppScreen>
         <ErrorState
-          message={error ?? "Loja não encontrada."}
+          message={error ?? "Escola não encontrada."}
           onRetry={refetch}
         />
       </AppScreen>
@@ -64,17 +66,17 @@ export default function EditStoreScreen() {
     <AppScreen>
       <View style={styles.container}>
         <AppHeader
-          title="Editar loja"
+          title="Editar escola"
           subtitle="Atualize os dados da unidade"
           showBackButton
         />
 
-        <StoreForm
+        <SchoolForm
           defaultValues={{
-            name: store.name,
-            address: store.address,
+            name: school.name,
+            address: school.address,
           }}
-          onSubmit={handleUpdateStore}
+          onSubmit={handleUpdateSchool}
           isSubmitting={isSubmitting}
           submitLabel="Salvar alterações"
         />

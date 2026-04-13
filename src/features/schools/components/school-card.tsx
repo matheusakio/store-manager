@@ -9,21 +9,21 @@ import {
 
 import { confirmDelete } from "@/components/feedback/app-alert";
 import { theme } from "@/theme";
-import { StoreWithProductsCount } from "../types/school.types";
+import { SchoolWithProductsCount } from "../types/school.types";
 
-type StoreCardProps = {
-  store: StoreWithProductsCount;
+type SchoolCardProps = {
+  school: SchoolWithProductsCount;
   onPress: () => void;
   onEdit: () => void;
   onDelete: () => void;
 };
 
-export function StoreCard({
-  store,
+export function SchoolCard({
+  school,
   onPress,
   onEdit,
   onDelete,
-}: StoreCardProps) {
+}: SchoolCardProps) {
   return (
     <TouchableOpacity
       activeOpacity={0.94}
@@ -33,11 +33,11 @@ export function StoreCard({
       <View style={styles.content}>
         <View style={styles.topRow}>
           <View style={styles.headerText}>
-            <Text style={styles.title}>{store.name}</Text>
+            <Text style={styles.title}>{school.name}</Text>
 
             <View style={styles.addressRow}>
               <MapPin size={15} color={theme.colors.textSecondary} />
-              <Text style={styles.address}>{store.address}</Text>
+              <Text style={styles.address}>{school.address}</Text>
             </View>
           </View>
 
@@ -50,12 +50,12 @@ export function StoreCard({
           <View style={styles.productsBadge}>
             <Package size={14} color={theme.colors.primary} />
             <Text style={styles.productsText}>
-              {store.productsCount} produto
-              {store.productsCount === 1 ? "" : "s"}
+              {school.productsCount} turma
+              {school.productsCount === 1 ? "" : "s"}
             </Text>
           </View>
 
-          <Text style={styles.linkText}>Ver produtos</Text>
+          <Text style={styles.linkText}>Ver turmas</Text>
         </View>
 
         <View style={styles.actions}>
@@ -72,8 +72,8 @@ export function StoreCard({
             activeOpacity={0.9}
             onPress={() =>
               confirmDelete(
-                "Excluir loja",
-                `Deseja excluir "${store.name}"?`,
+                "Excluir escola",
+                `Deseja excluir "${school.name}"?`,
                 onDelete,
               )
             }

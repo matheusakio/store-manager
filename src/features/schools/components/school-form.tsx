@@ -4,26 +4,26 @@ import { StyleSheet, View } from "react-native";
 
 import { Button, ButtonText } from "@/components/ui/button";
 import { TextField } from "@/components/forms/text-field";
-import { storeSchema, type StoreFormValues } from "@/lib/validations";
+import { storeSchema, type SchoolFormValues } from "@/lib/validations";
 
-type StoreFormProps = {
-  defaultValues?: StoreFormValues;
+type SchoolFormProps = {
+  defaultValues?: SchoolFormValues;
   isSubmitting?: boolean;
   submitLabel?: string;
-  onSubmit: (values: StoreFormValues) => Promise<void> | void;
+  onSubmit: (values: SchoolFormValues) => Promise<void> | void;
 };
 
-export function StoreForm({
+export function SchoolForm({
   defaultValues,
   isSubmitting = false,
   submitLabel = "Salvar",
   onSubmit,
-}: StoreFormProps) {
+}: SchoolFormProps) {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<StoreFormValues>({
+  } = useForm<SchoolFormValues>({
     resolver: zodResolver(storeSchema),
     defaultValues: defaultValues ?? {
       name: "",

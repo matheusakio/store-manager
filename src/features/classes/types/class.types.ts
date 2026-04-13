@@ -1,38 +1,34 @@
-import type { StoreId } from "@/features/schools/types/school.types";
+import type { SchoolId } from "@/features/schools/types/school.types";
 
-export const PRODUCT_CATEGORIES = [
-  "Eletrônicos",
-  "Roupas",
-  "Alimentos",
-  "Casa",
-  "Beleza",
-  "Outros",
+export const CLASS_SHIFTS = [
+  "Matutino",
+  "Vespertino",
+  "Noturno",
+  "Integral",
 ] as const;
 
-export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
-export type ProductId = string;
+export type ClassShift = (typeof CLASS_SHIFTS)[number];
 
-export type Product = {
-  id: ProductId;
-  storeId: StoreId;
+export type SchoolClassId = string;
+
+export type SchoolClass = {
+  id: SchoolClassId;
+  schoolId: SchoolId;
   name: string;
-  category: ProductCategory;
-  price: number;
-  imageUri?: string | undefined;
+  shift: ClassShift;
+  schoolYear: string;
   createdAt: string;
 };
 
-export type CreateProductInput = {
-  storeId: StoreId;
+export type CreateClassInput = {
+  schoolId: SchoolId;
   name: string;
-  category: ProductCategory;
-  price: number;
-  imageUri?: string | undefined;
+  shift: ClassShift;
+  schoolYear: string;
 };
 
-export type UpdateProductInput = {
+export type UpdateClassInput = {
   name: string;
-  category: ProductCategory;
-  price: number;
-  imageUri?: string | undefined;
+  shift: ClassShift;
+  schoolYear: string;
 };

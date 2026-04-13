@@ -5,35 +5,35 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { AppHeader } from "@/components/ui/app-header";
 import { AppScreen } from "@/components/ui/app-screen";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { ProductForm } from "@/features/classes/components/class-form";
-import { useProductActions } from "@/features/classes/hooks/use-class-actions";
+
+import { ClassForm } from "@/features/classes/components/class-form";
+import { useClassActions } from "@/features/classes/hooks/use-class-actions";
 import type { ProductFormValues } from "@/lib/validations";
 import { theme } from "@/theme";
 
-export default function NewProductScreen() {
+export default function NewClassScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ storeId: string }>();
-  const storeId = String(params.storeId);
+  const schoolId = String(params.storeId);
 
-  const { createProduct } = useProductActions();
+  const { createSchoolClass } = useClassActions();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleCreateProduct(values: ProductFormValues) {
+  async function handleCreateClass(values: ProductFormValues) {
     try {
       setIsSubmitting(true);
 
-      await createProduct({
-        storeId,
+      await createSchoolClass({
+        schoolId,
         name: values.name,
-        category: values.category,
-        price: values.price,
-        ...(values.imageUri ? { imageUri: values.imageUri } : {}),
+        shift: values.category,
+        schoolYear: values.price,
       });
 
-      showSuccess("Produto criado com sucesso.");
-      router.replace(`/stores/${storeId}`);
+      showSuccess("Turma criada com sucesso.");
+      router.replace(`/schools/${schoolId}`);
     } catch {
-      showError("Não foi possível criar o produto.");
+      showError("Não foi possível criar a turma.");
     } finally {
       setIsSubmitting(false);
     }
@@ -43,15 +43,15 @@ export default function NewProductScreen() {
     <AppScreen>
       <View style={styles.container}>
         <AppHeader
-          title="Novo produto"
-          subtitle="Cadastre um item para esta loja"
+          title="Nova turma"
+          subtitle="Cadastre uma turma para esta escola"
           showBackButton
         />
 
-        <ProductForm
-          onSubmit={handleCreateProduct}
+        <ClassForm
+          onSubmit={handleCreateClass}
           isSubmitting={isSubmitting}
-          submitLabel="Criar produto"
+          submitLabel="Criar turma"
         />
       </View>
     </AppScreen>

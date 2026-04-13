@@ -4,35 +4,35 @@ import { StyleSheet, View } from "react-native";
 
 import { Button, ButtonText } from "@/components/ui/button";
 import { TextField } from "@/components/forms/text-field";
-import { PriceField } from "@/components/forms/price-field";
-import { ImagePickerField } from "@/components/forms/image-picker-field";
+
 import {
-  productSchema,
-  type ProductFormInput,
+  classFormSchema,
+  type ClassFormInput,
   type ProductFormValues,
 } from "@/lib/validations";
-import { CategorySelect } from "./shift-select";
+
+import { ShiftSelect } from "./shift-select";
 import { theme } from "@/theme";
 
-type ProductFormProps = {
-  defaultValues?: ProductFormInput;
+type ClassFormProps = {
+  defaultValues?: ClassFormInput;
   isSubmitting?: boolean;
   submitLabel?: string;
   onSubmit: (values: ProductFormValues) => Promise<void> | void;
 };
 
-export function ProductForm({
+export function ClassForm({
   defaultValues,
   isSubmitting = false,
   submitLabel = "Salvar",
   onSubmit,
-}: ProductFormProps) {
+}: ClassFormProps) {
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProductFormInput, unknown, ProductFormValues>({
-    resolver: zodResolver(productSchema),
+  } = useForm<ClassFormInput>({
+    resolver: zodResolver(classFormSchema),
     defaultValues: defaultValues ?? {
       name: "",
       category: "",
@@ -48,10 +48,10 @@ export function ProductForm({
         name="name"
         render={({ field: { value, onChange } }) => (
           <TextField
-            label="Nome do produto"
+            label="Nome da turma"
             value={value}
             onChangeText={onChange}
-            placeholder="Ex: Fone Bluetooth"
+            placeholder="Ex: 5º Ano A"
             error={errors.name?.message}
           />
         )}
@@ -61,7 +61,7 @@ export function ProductForm({
         control={control}
         name="category"
         render={({ field: { value, onChange } }) => (
-          <CategorySelect
+          <ShiftSelect
             value={value}
             onChange={onChange}
             error={errors.category?.message}
@@ -73,26 +73,12 @@ export function ProductForm({
         control={control}
         name="price"
         render={({ field: { value, onChange } }) => (
-          <PriceField
-            label="Preço"
+          <TextField
+            label="Ano letivo"
             value={value}
             onChangeText={onChange}
-            placeholder="299,90"
+            placeholder="Ex: 2026"
             error={errors.price?.message}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="imageUri"
-        render={({ field: { value, onChange } }) => (
-          <ImagePickerField
-            label="Imagem do produto"
-            value={value}
-            onChange={onChange}
-            onClear={() => onChange("")}
-            error={errors.imageUri?.message}
           />
         )}
       />

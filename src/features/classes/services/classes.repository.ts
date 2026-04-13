@@ -1,28 +1,33 @@
 import { api } from "@/services/api/client";
 import type {
-  Product,
-  CreateProductInput,
-  UpdateProductInput,
+  SchoolClass,
+  CreateClassInput,
+  UpdateClassInput,
 } from "../types/class.types";
 
-export const productsRepository = {
-  listByStore: async (storeId: string): Promise<Product[]> => {
-    const response = await api.get<{ products: Product[] }>(
-      `/products?storeId=${storeId}`,
+export const classesRepository = {
+  listAll: async (): Promise<SchoolClass[]> => {
+    const response = await api.get<{ classes: SchoolClass[] }>("/classes");
+    return response.classes;
+  },
+
+  listBySchool: async (schoolId: string): Promise<SchoolClass[]> => {
+    const response = await api.get<{ classes: SchoolClass[] }>(
+      `/classes?schoolId=${schoolId}`,
     );
 
-    return response.products;
+    return response.classes;
   },
 
-  create: async (input: CreateProductInput): Promise<Product> => {
-    return api.post("/products", input);
+  create: async (input: CreateClassInput): Promise<SchoolClass> => {
+    return api.post("/classes", input);
   },
 
-  update: async (id: string, input: UpdateProductInput): Promise<Product> => {
-    return api.put(`/products/${id}`, input);
+  update: async (id: string, input: UpdateClassInput): Promise<SchoolClass> => {
+    return api.put(`/classes/${id}`, input);
   },
 
   remove: async (id: string) => {
-    return api.delete(`/products/${id}`);
+    return api.delete(`/classes/${id}`);
   },
 };

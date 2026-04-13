@@ -1,25 +1,22 @@
-import { productsRepository } from "../services/classes.repository";
-import type {
-  CreateProductInput,
-  UpdateProductInput,
-} from "../types/class.types";
+import { classesRepository } from "../services/classes.repository";
+import type { CreateClassInput, UpdateClassInput } from "../types/class.types";
 
-export function useProductActions() {
-  async function createProduct(input: CreateProductInput) {
-    return productsRepository.create(input);
+export function useClassActions() {
+  async function createSchoolClass(input: CreateClassInput) {
+    return classesRepository.create(input);
   }
 
-  async function updateProduct(id: string, input: UpdateProductInput) {
-    return productsRepository.update(id, input);
+  async function updateSchoolClass(id: string, input: UpdateClassInput) {
+    return classesRepository.update(id, input);
   }
 
-  async function deleteProduct(id: string) {
-    return productsRepository.remove(id);
+  async function deleteSchoolClass(id: string) {
+    return classesRepository.remove(id);
   }
 
   return {
-    createProduct,
-    updateProduct,
-    deleteProduct,
+    createSchoolClass,
+    updateSchoolClass,
+    deleteSchoolClass,
   };
 }

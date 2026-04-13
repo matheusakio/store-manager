@@ -1,20 +1,20 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { theme } from "@/theme";
 
-type StoreListFilterValue = "all" | "with-products" | "empty";
+type SchoolListFilterValue = "all" | "with-products" | "empty";
 
-type StoreListFilterProps = {
-  value: StoreListFilterValue;
-  onChange: (value: StoreListFilterValue) => void;
+type SchoolListFilterProps = {
+  value: SchoolListFilterValue;
+  onChange: (value: SchoolListFilterValue) => void;
 };
 
-const options: Array<{ label: string; value: StoreListFilterValue }> = [
+const options: Array<{ label: string; value: SchoolListFilterValue }> = [
   { label: "Todas", value: "all" },
   { label: "Com produtos", value: "with-products" },
   { label: "Sem produtos", value: "empty" },
 ];
 
-export function StoreListFilter({ value, onChange }: StoreListFilterProps) {
+export function SchoolListFilter({ value, onChange }: SchoolListFilterProps) {
   return (
     <ScrollView
       horizontal

@@ -1,35 +1,35 @@
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/services/api/client";
-import type { Product } from "../types/class.types";
+import { classesRepository } from "../services/classes.repository";
+import type { SchoolClass } from "../types/class.types";
 
-export function useAllProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
+export function useAllClasses() {
+  const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchProducts = useCallback(async () => {
+  const fetchClasses = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await api.get<{ products?: Product[] }>("/products");
-      setProducts(Array.isArray(response?.products) ? response.products : []);
+      const data = await classesRepository.listAll();
+      setClasses(Array.isArray(data) ? data : []);
     } catch {
-      setProducts([]);
-      setError("Não foi possível carregar os produtos.");
+      setClasses([]);
+      setError("Não foi possível carregar as turmas.");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    fetchClasses();
+  }, [fetchClasses]);
 
   return {
-    products,
+    classes,
     isLoading,
     error,
-    refetch: fetchProducts,
+    refetch: fetchClasses,
   };
 }

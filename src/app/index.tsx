@@ -10,13 +10,14 @@ import { HeroCard } from "@/components/ui/hero-card";
 import { LoadingState } from "@/components/ui/loading-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { SearchInput } from "@/components/ui/search-input";
-import { useAllProducts } from "@/features/classes/hooks/use-all-classes";
-import { StoreListFilter } from "@/features/schools/components/school-list-filter";
-import { StoreCard } from "@/features/schools/components/school-card";
-import { useStoreActions } from "@/features/schools/hooks/use-school-actions";
-import { useStores } from "@/features/schools/hooks/use-schools";
 
-import { mapStoresWithProductsCount } from "@/features/schools/utils/school.mappers";
+import { useAllClasses } from "@/features/classes/hooks/use-all-classes";
+import { SchoolListFilter } from "@/features/schools/components/school-list-filter";
+import { SchoolCard } from "@/features/schools/components/school-card";
+import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
+import { useSchools } from "@/features/schools/hooks/use-schools";
+import { mapSchoolsWithProductsCount } from "@/features/schools/utils/school.mappers";
+
 import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 
@@ -24,52 +25,52 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const {
-    stores = [],
-    isLoading: isLoadingStores,
+    schools = [],
+    isLoading: isLoadingSchools,
     error,
     refetch,
-  } = useStores();
+  } = useSchools();
 
-  const { products = [], isLoading: isLoadingProducts } = useAllProducts();
+  const { classes = [], isLoading: isLoadingClasses } = useAllClasses();
 
-  const { deleteStore } = useStoreActions();
+  const { deleteSchool } = useSchoolActions();
 
   const storeSearch = useAppStore((state) => state.storeSearch);
   const setStoreSearch = useAppStore((state) => state.setStoreSearch);
   const storeListFilter = useAppStore((state) => state.storeListFilter);
-  const setStoreListFilter = useAppStore((state) => state.setStoreListFilter);
+  const setSchoolListFilter = useAppStore((state) => state.setSchoolListFilter);
 
-  const storesWithCount = useMemo(() => {
-    return mapStoresWithProductsCount(stores ?? [], products ?? []);
-  }, [stores, products]);
+  const schoolsWithCount = useMemo(() => {
+    return mapSchoolsWithProductsCount(schools ?? [], classes ?? []);
+  }, [schools, classes]);
 
-  const filteredStores = useMemo(() => {
+  const filteredSchools = useMemo(() => {
     const query = storeSearch.trim().toLowerCase();
 
-    return storesWithCount.filter((store) => {
+    return schoolsWithCount.filter((school) => {
       const matchesSearch =
         !query ||
-        store.name.toLowerCase().includes(query) ||
-        store.address.toLowerCase().includes(query);
+        school.name.toLowerCase().includes(query) ||
+        school.address.toLowerCase().includes(query);
 
       const matchesFilter =
         storeListFilter === "all" ||
-        (storeListFilter === "with-products" && store.productsCount > 0) ||
-        (storeListFilter === "empty" && store.productsCount === 0);
+        (storeListFilter === "with-products" && school.productsCount > 0) ||
+        (storeListFilter === "empty" && school.productsCount === 0);
 
       return matchesSearch && matchesFilter;
     });
-  }, [storeSearch, storeListFilter, storesWithCount]);
+  }, [storeSearch, storeListFilter, schoolsWithCount]);
 
-  async function handleDeleteStore(storeId: string) {
-    await deleteStore(storeId);
+  async function handleDeleteSchool(schoolId: string) {
+    await deleteSchool(schoolId);
     await refetch();
   }
 
-  if (isLoadingStores || isLoadingProducts) {
+  if (isLoadingSchools || isLoadingClasses) {
     return (
       <AppScreen>
-        <LoadingState label="Carregando lojas..." />
+        <LoadingState label="Carregando escolas..." />
       </AppScreen>
     );
   }
@@ -85,21 +86,21 @@ export default function HomeScreen() {
   return (
     <AppScreen>
       <FlatList
-        data={filteredStores}
+        data={filteredSchools}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.headerContent}>
             <AppHeader
-              title="Lojas"
-              subtitle={`${filteredStores.length} unidades visíveis`}
+              title="Escolas"
+              subtitle={`${filteredSchools.length} unidades visíveis`}
             />
 
             <HeroCard
               eyebrow="Painel central"
-              title="Gerencie lojas e produtos com mais clareza"
-              description="Cadastre unidades, organize o catálogo e acompanhe os itens de cada loja em um só lugar."
+              title="Gerencie escolas e turmas com mais clareza"
+              description="Cadastre unidades, organize as turmas e acompanhe cada escola em um só lugar."
             />
 
             <SearchInput
@@ -108,29 +109,29 @@ export default function HomeScreen() {
               placeholder="Buscar por nome ou endereço"
             />
 
-            <StoreListFilter
+            <SchoolListFilter
               value={storeListFilter}
-              onChange={setStoreListFilter}
+              onChange={setSchoolListFilter}
             />
 
             <PrimaryButton
-              label="Cadastrar nova loja"
-              onPress={() => router.push("/stores/new")}
+              label="Cadastrar nova escola"
+              onPress={() => router.push("/schools/new")}
             />
           </View>
         }
         ListEmptyComponent={
           <EmptyState
-            title="Nenhuma loja encontrada"
-            description="Cadastre sua primeira loja ou ajuste sua busca."
+            title="Nenhuma escola encontrada"
+            description="Cadastre sua primeira escola ou ajuste sua busca."
           />
         }
         renderItem={({ item }) => (
-          <StoreCard
-            store={item}
-            onPress={() => router.push(`/stores/${item.id}`)}
-            onEdit={() => router.push(`/stores/${item.id}/edit`)}
-            onDelete={() => handleDeleteStore(item.id)}
+          <SchoolCard
+            school={item}
+            onPress={() => router.push(`/schools/${item.id}`)}
+            onEdit={() => router.push(`/schools/${item.id}/edit`)}
+            onDelete={() => handleDeleteSchool(item.id)}
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

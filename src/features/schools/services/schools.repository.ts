@@ -1,25 +1,25 @@
 import { api } from "@/services/api/client";
-import {
-  CreateStoreInput,
-  Store,
-  UpdateStoreInput,
+import type {
+  CreateSchoolInput,
+  School,
+  UpdateSchoolInput,
 } from "../types/school.types";
 
-export const storesRepository = {
-  list: async (): Promise<Store[]> => {
-    const response = await api.get<{ stores: Store[] }>("/stores");
-    return response.stores;
+export const schoolsRepository = {
+  list: async (): Promise<School[]> => {
+    const response = await api.get<{ schools: School[] }>("/schools");
+    return response.schools;
   },
 
-  create: async (input: CreateStoreInput): Promise<Store> => {
-    return api.post("/stores", input);
+  create: async (input: CreateSchoolInput): Promise<School> => {
+    return api.post("/schools", input);
   },
 
-  update: async (id: string, input: UpdateStoreInput): Promise<Store> => {
-    return api.put(`/stores/${id}`, input);
+  update: async (id: string, input: UpdateSchoolInput): Promise<School> => {
+    return api.put(`/schools/${id}`, input);
   },
 
   remove: async (id: string) => {
-    return api.delete(`/stores/${id}`);
+    return api.delete(`/schools/${id}`);
   },
 };

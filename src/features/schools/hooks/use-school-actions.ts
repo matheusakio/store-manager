@@ -1,22 +1,22 @@
-import { storesRepository } from "../services/schools.repository";
-import { CreateStoreInput, UpdateStoreInput } from "../types/school.types";
+import { schoolsRepository } from "../services/schools.repository";
+import { CreateSchoolInput, UpdateSchoolInput } from "../types/school.types";
 
-export function useStoreActions() {
-  async function createStore(input: CreateStoreInput) {
-    return storesRepository.create(input);
+export function useSchoolActions() {
+  async function createSchool(input: CreateSchoolInput) {
+    return schoolsRepository.create(input);
   }
 
-  async function updateStore(id: string, input: UpdateStoreInput) {
-    return storesRepository.update(id, input);
+  async function updateSchool(id: string, input: UpdateSchoolInput) {
+    return schoolsRepository.update(id, input);
   }
 
-  async function deleteStore(id: string) {
-    return storesRepository.remove(id);
+  async function deleteSchool(id: string) {
+    return schoolsRepository.remove(id);
   }
 
   return {
-    createStore,
-    updateStore,
-    deleteStore,
+    createSchool,
+    updateSchool,
+    deleteSchool,
   };
 }

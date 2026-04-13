@@ -1,19 +1,19 @@
-export type StoreId = string;
+export type SchoolId = string;
 
-export type Store = {
-  id: StoreId;
+export type School = {
+  id: SchoolId;
   name: string;
   address: string;
   createdAt: string;
 };
 
-export type CreateStoreInput = {
+export type CreateSchoolInput = {
   name: string;
   address: string;
 };
 
-export type UpdateStoreInput = CreateStoreInput;
+export type UpdateSchoolInput = CreateSchoolInput;
 
-export type StoreWithProductsCount = Store & {
+export type SchoolWithProductsCount = School & {
   productsCount: number;
 };

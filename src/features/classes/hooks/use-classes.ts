@@ -1,39 +1,39 @@
 import { useCallback, useEffect, useState } from "react";
-import { productsRepository } from "../services/classes.repository";
-import type { Product } from "../types/class.types";
+import { classesRepository } from "../services/classes.repository";
+import type { SchoolClass } from "../types/class.types";
 import { useAppStore } from "@/store/app-store";
 
-export function useProducts(storeId: string) {
-  const [products, setProducts] = useState<Product[]>([]);
+export function useClasses(schoolId: string) {
+  const [classes, setClasses] = useState<SchoolClass[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const resetProductFilters = useAppStore((state) => state.resetProductFilters);
 
-  const fetchProducts = useCallback(async () => {
+  const fetchClasses = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const data = await productsRepository.listByStore(storeId);
-      setProducts(Array.isArray(data) ? data : []);
+      const data = await classesRepository.listBySchool(schoolId);
+      setClasses(Array.isArray(data) ? data : []);
     } catch {
-      setProducts([]);
-      setError("Erro ao carregar produtos.");
+      setClasses([]);
+      setError("Erro ao carregar turmas.");
     } finally {
       setIsLoading(false);
     }
-  }, [storeId]);
+  }, [schoolId]);
 
   useEffect(() => {
     resetProductFilters();
-    fetchProducts();
-  }, [fetchProducts, resetProductFilters]);
+    fetchClasses();
+  }, [fetchClasses, resetProductFilters]);
 
   return {
-    products,
+    classes,
     isLoading,
     error,
-    refetch: fetchProducts,
+    refetch: fetchClasses,
   };
 }

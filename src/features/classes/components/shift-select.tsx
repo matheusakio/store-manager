@@ -5,39 +5,32 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  PRODUCT_CATEGORIES,
-  type ProductCategory,
-} from "../types/class.types";
+import { CLASS_SHIFTS, type ClassShift } from "../types/class.types";
 
-type CategorySelectProps = {
-  value: ProductCategory | "";
-  onChange: (value: ProductCategory) => void;
-  error?: string | undefined;
+type ShiftSelectProps = {
+  value: ClassShift | "";
+  onChange: (value: ClassShift) => void;
+  error?: string;
 };
 
-export function CategorySelect({
-  value,
-  onChange,
-  error,
-}: CategorySelectProps) {
+export function ShiftSelect({ value, onChange, error }: ShiftSelectProps) {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Categoria</Text>
+      <Text style={styles.label}>Turno</Text>
 
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.content}
       >
-        {PRODUCT_CATEGORIES.map((category) => {
-          const isActive = category === value;
+        {CLASS_SHIFTS.map((shift) => {
+          const isActive = shift === value;
 
           return (
             <TouchableOpacity
-              key={category}
+              key={shift}
               activeOpacity={0.9}
-              onPress={() => onChange(category)}
+              onPress={() => onChange(shift)}
               style={[styles.chip, isActive ? styles.chipActive : null]}
             >
               <Text
@@ -46,7 +39,7 @@ export function CategorySelect({
                   isActive ? styles.chipTextActive : null,
                 ]}
               >
-                {category}
+                {shift}
               </Text>
             </TouchableOpacity>
           );

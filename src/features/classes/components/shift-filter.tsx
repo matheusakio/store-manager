@@ -1,19 +1,16 @@
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
-import {
-  PRODUCT_CATEGORIES,
-  type ProductCategory,
-} from "../types/class.types";
+import { CLASS_SHIFTS, type ClassShift } from "../types/class.types";
 
-type CategoryFilterValue = ProductCategory | "Todos";
+type ShiftFilterValue = "Todos" | ClassShift;
 
-type CategoryFilterProps = {
-  value: CategoryFilterValue;
-  onChange: (value: CategoryFilterValue) => void;
+type ShiftFilterProps = {
+  value: ShiftFilterValue;
+  onChange: (value: ShiftFilterValue) => void;
 };
 
-const options: CategoryFilterValue[] = ["Todos", ...PRODUCT_CATEGORIES];
+const options: ShiftFilterValue[] = ["Todos", ...CLASS_SHIFTS];
 
-export function CategoryFilter({ value, onChange }: CategoryFilterProps) {
+export function ShiftFilter({ value, onChange }: ShiftFilterProps) {
   return (
     <ScrollView
       horizontal

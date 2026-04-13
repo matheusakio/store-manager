@@ -6,17 +6,15 @@ import { AppHeader } from "@/components/ui/app-header";
 import { AppScreen } from "@/components/ui/app-screen";
 import { ErrorState } from "@/components/ui/error-state";
 import { LoadingState } from "@/components/ui/loading-state";
-
 import { showError, showSuccess } from "@/components/feedback/app-alert";
 
 import type { ProductFormValues } from "@/lib/validations";
-import { numberToBRLInput } from "@/lib/currency";
+import { ClassForm } from "@/features/classes/components/class-form";
+import { useClasses } from "@/features/classes/hooks/use-classes";
+import { useClassActions } from "@/features/classes/hooks/use-class-actions";
 import { theme } from "@/theme";
-import { useProducts } from "@/features/classes/hooks/use-classes";
-import { useProductActions } from "@/features/classes/hooks/use-class-actions";
-import { ProductForm } from "@/features/classes/components/class-form";
 
-export default function EditProductScreen() {
+export default function EditClassScreen() {
   const router = useRouter();
 
   const params = useLocalSearchParams<{
@@ -24,35 +22,33 @@ export default function EditProductScreen() {
     productId: string;
   }>();
 
-  const storeId = String(params.storeId);
-  const productId = String(params.productId);
+  const schoolId = String(params.storeId);
+  const classId = String(params.productId);
 
-  const { products, isLoading, error, refetch } = useProducts(storeId);
-  const { updateProduct } = useProductActions();
+  const { classes, isLoading, error, refetch } = useClasses(schoolId);
+  const { updateSchoolClass } = useClassActions();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const product = useMemo(
-    () => products.find((item) => item.id === productId) ?? null,
-    [products, productId],
+  const schoolClass = useMemo(
+    () => classes.find((item) => item.id === classId) ?? null,
+    [classes, classId],
   );
 
-  async function handleUpdateProduct(values: ProductFormValues) {
+  async function handleUpdateClass(values: ProductFormValues) {
     try {
       setIsSubmitting(true);
 
-      await updateProduct(productId, {
+      await updateSchoolClass(classId, {
         name: values.name,
-        category: values.category,
-        price: values.price,
-        ...(values.imageUri ? { imageUri: values.imageUri } : {}),
+        shift: values.category,
+        schoolYear: values.price,
       });
 
-      showSuccess("Produto atualizado com sucesso.");
-
-      router.replace(`/stores/${storeId}`);
+      showSuccess("Turma atualizada com sucesso.");
+      router.replace(`/schools/${schoolId}`);
     } catch {
-      showError("Não foi possível atualizar o produto.");
+      showError("Não foi possível atualizar a turma.");
     } finally {
       setIsSubmitting(false);
     }
@@ -61,16 +57,16 @@ export default function EditProductScreen() {
   if (isLoading) {
     return (
       <AppScreen>
-        <LoadingState label="Carregando produto..." />
+        <LoadingState label="Carregando turma..." />
       </AppScreen>
     );
   }
 
-  if (error || !product) {
+  if (error || !schoolClass) {
     return (
       <AppScreen>
         <ErrorState
-          message={error ?? "Produto não encontrado."}
+          message={error ?? "Turma não encontrada."}
           onRetry={refetch}
         />
       </AppScreen>
@@ -81,19 +77,19 @@ export default function EditProductScreen() {
     <AppScreen>
       <View style={styles.container}>
         <AppHeader
-          title="Editar produto"
-          subtitle="Atualize os dados do item"
+          title="Editar turma"
+          subtitle="Atualize os dados da turma"
           showBackButton
         />
 
-        <ProductForm
+        <ClassForm
           defaultValues={{
-            name: product.name,
-            category: product.category,
-            price: numberToBRLInput(product.price),
-            imageUri: product.imageUri ?? "",
+            name: schoolClass.name,
+            category: schoolClass.shift,
+            price: schoolClass.schoolYear,
+            imageUri: "",
           }}
-          onSubmit={handleUpdateProduct}
+          onSubmit={handleUpdateClass}
           isSubmitting={isSubmitting}
           submitLabel="Salvar alterações"
         />

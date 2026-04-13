@@ -10,63 +10,68 @@ import { LoadingState } from "@/components/ui/loading-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { SearchInput } from "@/components/ui/search-input";
 
-import { CategoryFilter } from "@/features/classes/components/shift-filter";
-import { ProductCard } from "@/features/classes/components/class-card";
-import { useProductActions } from "@/features/classes/hooks/use-class-actions";
-import { useProducts } from "@/features/classes/hooks/use-classes";
-import { useStores } from "@/features/schools/hooks/use-schools";
+import { ShiftFilter } from "@/features/classes/components/shift-filter";
+import { ClassCard } from "@/features/classes/components/class-card";
+import { useClassActions } from "@/features/classes/hooks/use-class-actions";
+import { useClasses } from "@/features/classes/hooks/use-classes";
+import { useSchools } from "@/features/schools/hooks/use-schools";
+
 import { useAppStore } from "@/store/app-store";
 import { theme } from "@/theme";
 
-export default function StoreDetailsScreen() {
+export default function SchoolDetailsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ storeId: string }>();
-  const storeId = String(params.storeId);
+  const schoolId = String(params.storeId);
 
-  const { products = [], isLoading, error, refetch } = useProducts(storeId);
-  const { getStoreById, isLoading: isLoadingStore } = useStores();
-  const { deleteProduct } = useProductActions();
+  const { classes = [], isLoading, error, refetch } = useClasses(schoolId);
+  const { getSchoolById, isLoading: isLoadingSchool } = useSchools();
+  const { deleteSchoolClass } = useClassActions();
 
   const productSearch = useAppStore((state) => state.productSearch);
   const selectedCategory = useAppStore((state) => state.selectedCategory);
   const setProductSearch = useAppStore((state) => state.setProductSearch);
   const setSelectedCategory = useAppStore((state) => state.setSelectedCategory);
 
-  const store = useMemo(() => getStoreById(storeId), [getStoreById, storeId]);
+  const school = useMemo(
+    () => getSchoolById(schoolId),
+    [getSchoolById, schoolId],
+  );
 
-  const filteredProducts = useMemo(() => {
-    return (products ?? []).filter((product) => {
+  const filteredClasses = useMemo(() => {
+    return (classes ?? []).filter((item) => {
       const query = productSearch.trim().toLowerCase();
 
       const matchesSearch =
-        product.name.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query);
+        item.name.toLowerCase().includes(query) ||
+        item.shift.toLowerCase().includes(query) ||
+        item.schoolYear.toLowerCase().includes(query);
 
-      const matchesCategory =
-        selectedCategory === "Todos" || product.category === selectedCategory;
+      const matchesShift =
+        selectedCategory === "Todos" || item.shift === selectedCategory;
 
-      return matchesSearch && matchesCategory;
+      return matchesSearch && matchesShift;
     });
-  }, [productSearch, products, selectedCategory]);
+  }, [productSearch, classes, selectedCategory]);
 
-  async function handleDeleteProduct(productId: string) {
-    await deleteProduct(productId);
+  async function handleDeleteClass(classId: string) {
+    await deleteSchoolClass(classId);
     await refetch();
   }
 
-  if (isLoading || isLoadingStore) {
+  if (isLoading || isLoadingSchool) {
     return (
       <AppScreen>
-        <LoadingState label="Carregando produtos..." />
+        <LoadingState label="Carregando turmas..." />
       </AppScreen>
     );
   }
 
-  if (error || !store) {
+  if (error || !school) {
     return (
       <AppScreen>
         <ErrorState
-          message={error ?? "Loja não encontrada."}
+          message={error ?? "Escola não encontrada."}
           onRetry={refetch}
         />
       </AppScreen>
@@ -76,48 +81,48 @@ export default function StoreDetailsScreen() {
   return (
     <AppScreen>
       <FlatList
-        data={filteredProducts}
+        data={filteredClasses}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
         ListHeaderComponent={
           <View style={styles.headerContent}>
             <AppHeader
-              title={store.name}
-              subtitle={store.address}
+              title={school.name}
+              subtitle={school.address}
               showBackButton
             />
 
             <SearchInput
               value={productSearch}
               onChangeText={setProductSearch}
-              placeholder="Buscar produto ou categoria"
+              placeholder="Buscar turma, turno ou ano letivo"
             />
 
-            <CategoryFilter
+            <ShiftFilter
               value={selectedCategory}
               onChange={setSelectedCategory}
             />
 
             <PrimaryButton
-              label="Cadastrar novo produto"
-              onPress={() => router.push(`/stores/${storeId}/products/new`)}
+              label="Cadastrar nova turma"
+              onPress={() => router.push(`/schools/${schoolId}/products/new`)}
             />
           </View>
         }
         ListEmptyComponent={
           <EmptyState
-            title="Nenhum produto encontrado"
-            description="Cadastre um produto ou ajuste os filtros."
+            title="Nenhuma turma encontrada"
+            description="Cadastre uma turma ou ajuste os filtros."
           />
         }
         renderItem={({ item }) => (
-          <ProductCard
-            product={item}
+          <ClassCard
+            schoolClass={item}
             onEdit={() =>
-              router.push(`/stores/${storeId}/products/${item.id}/edit`)
+              router.push(`/schools/${schoolId}/products/${item.id}/edit`)
             }
-            onDelete={() => handleDeleteProduct(item.id)}
+            onDelete={() => handleDeleteClass(item.id)}
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

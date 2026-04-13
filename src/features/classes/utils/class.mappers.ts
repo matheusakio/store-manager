@@ -1,7 +1,7 @@
 import { theme } from "@/theme";
-import type { ProductCategory } from "../types/class.types";
+import type { SchoolClassCategory } from "../types/class.types";
 
-export function getCategoryAccent(category: ProductCategory) {
+export function getCategoryAccent(category: SchoolClassCategory) {
   switch (category) {
     case "Eletrônicos":
       return theme.category.electronics;

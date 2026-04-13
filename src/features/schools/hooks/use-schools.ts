@@ -1,41 +1,41 @@
 import { useCallback, useEffect, useState } from "react";
-import { Store } from "../types/school.types";
-import { storesRepository } from "../services/schools.repository";
+import { schoolsRepository } from "../services/schools.repository";
+import type { School } from "../types/school.types";
 
-export function useStores() {
-  const [stores, setStores] = useState<Store[]>([]);
+export function useSchools() {
+  const [schools, setSchools] = useState<School[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchStores = useCallback(async () => {
+  const fetchSchools = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const data = await storesRepository.list();
-      setStores(Array.isArray(data) ? data : []);
+      const data = await schoolsRepository.list();
+      setSchools(Array.isArray(data) ? data : []);
     } catch {
-      setStores([]);
-      setError("Não foi possível carregar as lojas.");
+      setSchools([]);
+      setError("Erro ao carregar escolas.");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchStores();
-  }, [fetchStores]);
+    fetchSchools();
+  }, [fetchSchools]);
 
-  const getStoreById = useCallback(
-    (storeId: string) => stores.find((store) => store.id === storeId) ?? null,
-    [stores],
+  const getSchoolById = useCallback(
+    (schoolId: string) => schools.find((item) => item.id === schoolId) ?? null,
+    [schools],
   );
 
   return {
-    stores,
+    schools,
     isLoading,
     error,
-    refetch: fetchStores,
-    getStoreById,
+    refetch: fetchSchools,
+    getSchoolById,
   };
 }

@@ -1,37 +1,33 @@
 import { z } from "zod";
-import { PRODUCT_CATEGORIES } from "@/features/classes/types/class.types";
+import { CLASS_SHIFTS } from "@/features/classes/types/class.types";
 
-export const storeSchema = z.object({
-  name: z.string().min(2, "Informe o nome da loja").trim(),
-  address: z.string().min(5, "Informe o endereço").trim(),
-});
+const requiredText = (message: string) => z.string().trim().min(1, message);
 
-export type StoreFormValues = z.infer<typeof storeSchema>;
-
-const productCategoryInputSchema = z
-  .union([z.enum(PRODUCT_CATEGORIES), z.literal("")])
+const classShiftInputSchema = z
+  .union([z.enum(CLASS_SHIFTS), z.literal("")])
   .refine((value) => value !== "", {
-    message: "Selecione uma categoria",
+    message: "Selecione um turno",
   });
 
-const productPriceInputSchema = z
-  .string()
-  .trim()
-  .min(1, "Informe um preço válido")
-  .transform((value) => {
-    const digits = value.replace(/\D/g, "");
-    return Number(digits) / 100;
-  })
-  .refine((value) => !Number.isNaN(value) && value > 0, {
-    message: "Informe um preço válido",
-  });
-
-export const productSchema = z.object({
-  name: z.string().min(2, "Informe o nome do produto").trim(),
-  category: productCategoryInputSchema,
-  price: productPriceInputSchema,
-  imageUri: z.string().trim().optional(),
+export const schoolFormSchema = z.object({
+  name: requiredText("Informe o nome"),
+  address: requiredText("Informe o endereço"),
 });
 
-export type ProductFormInput = z.input<typeof productSchema>;
-export type ProductFormValues = z.output<typeof productSchema>;
+export type SchoolFormValues = z.infer<typeof schoolFormSchema>;
+
+export const classFormSchema = z.object({
+  name: requiredText("Informe o nome da turma"),
+  category: classShiftInputSchema,
+  price: requiredText("Informe o ano letivo"),
+  imageUri: z.string().default(""),
+});
+
+export type ClassFormInput = {
+  name: string;
+  category: "" | (typeof CLASS_SHIFTS)[number];
+  price: string;
+  imageUri: string;
+};
+
+export type ProductFormValues = z.output<typeof classFormSchema>;

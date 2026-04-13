@@ -7,32 +7,32 @@ import { AppScreen } from "@/components/ui/app-screen";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { TextField } from "@/components/forms/text-field";
 import { showError, showSuccess } from "@/components/feedback/app-alert";
-import { useStoreActions } from "@/features/schools/hooks/use-school-actions";
+import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
 import { theme } from "@/theme";
 
-export default function NewStoreScreen() {
+export default function NewSchoolScreen() {
   const router = useRouter();
-  const { createStore } = useStoreActions();
+  const { createSchool } = useSchoolActions();
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
 
   async function handleSubmit() {
     if (!name.trim() || !address.trim()) {
-      showError("Preencha nome e endereço da loja.");
+      showError("Preencha nome e endereço da escola.");
       return;
     }
 
     try {
-      await createStore({
+      await createSchool({
         name: name.trim(),
         address: address.trim(),
       });
 
-      showSuccess("Loja criada com sucesso.");
+      showSuccess("Escola criada com sucesso.");
       router.replace("/");
     } catch {
-      showError("Não foi possível criar a loja.");
+      showError("Não foi possível criar a escola.");
     }
   }
 
@@ -40,26 +40,26 @@ export default function NewStoreScreen() {
     <AppScreen>
       <View style={styles.container}>
         <AppHeader
-          title="Nova loja"
+          title="Nova escola"
           subtitle="Cadastre uma nova unidade"
           showBackButton
         />
 
         <TextField
-          label="Nome da loja"
+          label="Nome da escola"
           value={name}
           onChangeText={setName}
-          placeholder="Ex: Loja Centro"
+          placeholder="Ex: Escola Municipal Centro"
         />
 
         <TextField
           label="Endereço"
           value={address}
           onChangeText={setAddress}
-          placeholder="Ex: Centro - São Paulo"
+          placeholder="Ex: Centro - Goiânia"
         />
 
-        <PrimaryButton label="Criar loja" onPress={handleSubmit} />
+        <PrimaryButton label="Criar escola" onPress={handleSubmit} />
       </View>
     </AppScreen>
   );
