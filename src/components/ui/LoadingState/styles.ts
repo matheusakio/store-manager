@@ -29,15 +29,15 @@ export const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: "#FFFFFF",
+    fontSize: theme.fonts.size.xxxl,
+    fontWeight: theme.fonts.weight.extrabold,
+    color: theme.colors.textOnPrimary,
     textAlign: "center",
   },
   description: {
-    fontSize: 14,
+    fontSize: theme.fonts.size.md,
     lineHeight: 20,
-    color: "rgba(255,255,255,0.78)",
+    color: theme.colors.textOnDark,
     textAlign: "center",
   },
 });

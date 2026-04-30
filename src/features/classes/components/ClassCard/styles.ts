@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
   },
 
   name: {
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: theme.fonts.size.xxl,
+    fontWeight: theme.fonts.weight.extrabold,
     color: theme.colors.text,
   },
 
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-    paddingHorizontal: 10,
+    paddingHorizontal: theme.spacing.md,
     paddingVertical: 6,
     borderRadius: theme.radius.pill,
     gap: 6,
@@ -40,8 +40,8 @@ export const styles = StyleSheet.create({
   },
 
   badgeText: {
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: theme.fonts.size.xs,
+    fontWeight: theme.fonts.weight.bold,
     color: theme.colors.primary,
   },
 
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
-    gap: 8,
+    gap: theme.spacing.sm,
   },
 
   deleteButton: {
@@ -68,8 +68,8 @@ export const styles = StyleSheet.create({
   },
 
   actionText: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: theme.fonts.size.md,
+    fontWeight: theme.fonts.weight.bold,
     color: theme.colors.text,
   },
 

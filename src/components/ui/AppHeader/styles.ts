@@ -20,12 +20,12 @@ export const styles = StyleSheet.create({
     gap: theme.spacing.xs,
   },
   title: {
-    fontSize: 30,
-    fontWeight: "900",
+    fontSize: theme.fonts.size.hero,
+    fontWeight: theme.fonts.weight.black,
     color: theme.colors.text,
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: theme.fonts.size.lg,
     color: theme.colors.textSecondary,
   },
 });

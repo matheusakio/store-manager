@@ -1,19 +1,20 @@
 import { StyleSheet } from "react-native";
+import { theme } from "@/theme";
 
 export const styles = StyleSheet.create({
   container: {
-    paddingVertical: 32,
+    paddingVertical: theme.spacing.xxxl,
     alignItems: "center",
-    gap: 12,
+    gap: theme.spacing.md,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#DC2626",
+    fontSize: theme.fonts.size.xl,
+    fontWeight: theme.fonts.weight.bold,
+    color: theme.colors.danger,
   },
   message: {
-    fontSize: 14,
-    color: "#64748B",
+    fontSize: theme.fonts.size.md,
+    color: theme.colors.textSecondary,
     textAlign: "center",
   },
 });

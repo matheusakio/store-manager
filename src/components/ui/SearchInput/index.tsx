@@ -1,6 +1,5 @@
-import { TextInput, View } from "react-native";
 import { Search } from "lucide-react-native";
-import { styles } from "./styles";
+import { Input, InputField, InputIcon } from "@/components/ui/input";
 
 type SearchInputProps = {
   value: string;
@@ -14,15 +13,15 @@ export function SearchInput({
   placeholder = "Buscar...",
 }: SearchInputProps) {
   return (
-    <View style={styles.container}>
-      <Search size={18} color="#64748B" />
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor="#94A3B8"
-        style={styles.input}
-      />
-    </View>
+  <Input variant="outline" size="md" className="px-3 items-center">
+    <InputIcon as={Search} className="text-typography-400" />
+    <InputField
+      className="flex-1"
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      placeholderTextColor="#9CA3AF"
+    />
+  </Input>
   );
 }

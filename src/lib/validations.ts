@@ -18,21 +18,18 @@ export type SchoolFormValues = z.infer<typeof schoolFormSchema>;
 
 export const classFormSchema = z.object({
   name: requiredText("Informe o nome da turma"),
-  category: classShiftInputSchema,
-  price: requiredText("Informe o ano letivo"),
-  imageUri: z.string(),
+  shift: classShiftInputSchema,
+  schoolYear: requiredText("Informe o ano letivo"),
 });
 
 export type ClassFormInput = {
   name: string;
-  category: "" | (typeof CLASS_SHIFTS)[number];
-  price: string;
-  imageUri: string;
+  shift: "" | (typeof CLASS_SHIFTS)[number];
+  schoolYear: string;
 };
 
-export type ProductFormValues = {
+export type ClassFormValues = {
   name: string;
-  category: (typeof CLASS_SHIFTS)[number];
-  price: string;
-  imageUri: string;
+  shift: (typeof CLASS_SHIFTS)[number];
+  schoolYear: string;
 };

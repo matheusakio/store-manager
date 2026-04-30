@@ -5,10 +5,13 @@ export const theme = {
     surfaceAlt: "#F1F5F9",
 
     border: "#E2E8F0",
+    borderLight: "#CBD5E1",
 
     text: "#0F172A",
     textSecondary: "#64748B",
     textMuted: "#94A3B8",
+    textOnPrimary: "#FFFFFF",
+    textOnDark: "rgba(255,255,255,0.85)",
 
     primary: "#0F766E",
     primaryStrong: "#115E59",
@@ -19,38 +22,43 @@ export const theme = {
 
     warning: "#D97706",
     warningSoft: "#FEF3C7",
+
+    chip: {
+      border: "#CBD5E1",
+      background: "#FFFFFF",
+      text: "#334155",
+      activeBackground: "#0F766E",
+      activeBorder: "#0F766E",
+      activeText: "#FFFFFF",
+    },
+  },
+
+  fonts: {
+    size: {
+      xs: 12,
+      sm: 13,
+      md: 14,
+      lg: 15,
+      xl: 16,
+      xxl: 18,
+      xxxl: 20,
+      xxxxl: 24,
+      header: 28,
+      hero: 30,
+    },
+    weight: {
+      regular: "400" as const,
+      semibold: "600" as const,
+      bold: "700" as const,
+      extrabold: "800" as const,
+      black: "900" as const,
+    },
   },
 
   gradients: {
     hero: ["#134E4A", "#0F766E", "#14B8A6"] as const,
     darkCard: ["#0F172A", "#1E293B"] as const,
-  },
-
-  category: {
-    electronics: {
-      background: "#DBEAFE",
-      text: "#1D4ED8",
-    },
-    clothes: {
-      background: "#FCE7F3",
-      text: "#BE185D",
-    },
-    food: {
-      background: "#DCFCE7",
-      text: "#15803D",
-    },
-    home: {
-      background: "#FEF3C7",
-      text: "#B45309",
-    },
-    beauty: {
-      background: "#EDE9FE",
-      text: "#7C3AED",
-    },
-    other: {
-      background: "#E2E8F0",
-      text: "#475569",
-    },
+    background: ["#F8FAFC", "#F1F5F9"] as const,
   },
 
   spacing: {

@@ -7,17 +7,17 @@ import { TextField } from "@/components/forms/TextField";
 import {
   classFormSchema,
   type ClassFormInput,
-  type ProductFormValues,
+  type ClassFormValues,
 } from "@/lib/validations";
 
 import { styles } from "./styles";
-import { ShiftSelect } from "../ShiftSelect";
+import { ShiftSelector } from "../ShiftSelector";
 
 type ClassFormProps = {
   defaultValues?: ClassFormInput;
   isSubmitting?: boolean;
   submitLabel?: string;
-  onSubmit: (values: ProductFormValues) => Promise<void> | void;
+  onSubmit: (values: ClassFormValues) => Promise<void> | void;
 };
 
 export function ClassForm({
@@ -30,13 +30,12 @@ export function ClassForm({
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<ClassFormInput, unknown, ProductFormValues>({
+  } = useForm<ClassFormInput, unknown, ClassFormValues>({
     resolver: zodResolver(classFormSchema),
     defaultValues: defaultValues ?? {
       name: "",
-      category: "",
-      price: "",
-      imageUri: "",
+      shift: "",
+      schoolYear: "",
     },
   });
 
@@ -58,26 +57,27 @@ export function ClassForm({
 
       <Controller
         control={control}
-        name="category"
+        name="shift"
         render={({ field: { value, onChange } }) => (
-          <ShiftSelect
+          <ShiftSelector
             value={value}
             onChange={onChange}
-            error={errors.category?.message}
+            label="Turno"
+            error={errors.shift?.message}
           />
         )}
       />
 
       <Controller
         control={control}
-        name="price"
+        name="schoolYear"
         render={({ field: { value, onChange } }) => (
           <TextField
             label="Ano letivo"
             value={value}
             onChangeText={onChange}
             placeholder="Ex: 2026"
-            error={errors.price?.message}
+            error={errors.schoolYear?.message}
           />
         )}
       />

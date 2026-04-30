@@ -24,18 +24,18 @@ export const styles = StyleSheet.create({
     gap: theme.spacing.sm,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "800",
+    fontSize: theme.fonts.size.xxl,
+    fontWeight: theme.fonts.weight.extrabold,
     color: theme.colors.text,
   },
   addressRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: theme.spacing.sm,
   },
   address: {
     flex: 1,
-    fontSize: 14,
+    fontSize: theme.fonts.size.md,
     color: theme.colors.textSecondary,
   },
   chevronWrapper: {
@@ -52,23 +52,23 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: theme.spacing.md,
   },
-  productsBadge: {
+  classesBadge: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: theme.spacing.sm,
     backgroundColor: theme.colors.primarySoft,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
     borderRadius: theme.radius.pill,
   },
-  productsText: {
-    fontSize: 13,
-    fontWeight: "700",
+  classesText: {
+    fontSize: theme.fonts.size.sm,
+    fontWeight: theme.fonts.weight.bold,
     color: theme.colors.primary,
   },
   linkText: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: theme.fonts.size.md,
+    fontWeight: theme.fonts.weight.bold,
     color: theme.colors.primary,
   },
   actions: {
@@ -85,15 +85,15 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: theme.spacing.sm,
   },
   deleteButton: {
     backgroundColor: theme.colors.dangerSoft,
     borderColor: theme.colors.dangerSoft,
   },
   actionText: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: theme.fonts.size.md,
+    fontWeight: theme.fonts.weight.bold,
     color: theme.colors.text,
   },
   deleteText: {

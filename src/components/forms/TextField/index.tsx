@@ -1,12 +1,13 @@
-import { Text, TextInput, View } from "react-native";
+import { Text, View } from "react-native";
 
-import { styles } from "./styles";
+import { Input, InputField } from "@/components/ui/input";
+import { VStack } from "@/components/ui/vstack";
 
 type TextFieldProps = {
   label: string;
   value: string;
   onChangeText: (value: string) => void;
-  placeholder?: string | undefined;
+  placeholder?: string;
   error?: string | undefined;
 };
 
@@ -18,18 +19,18 @@ export function TextField({
   error,
 }: TextFieldProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor="#94A3B8"
-        style={[styles.input, error ? styles.inputError : null]}
-      />
-
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-    </View>
+    <VStack space="xs">
+      <Text className="text-sm font-semibold text-typography-900">{label}</Text>
+      <Input variant="outline" size="md" isInvalid={!!error}>
+        <InputField
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+        />
+      </Input>
+      {error ? (
+        <Text className="text-xs text-error-600">{error}</Text>
+      ) : null}
+    </VStack>
   );
 }

@@ -21,7 +21,7 @@ export function LoadingState({
         style={styles.card}
       >
         <View style={styles.spinnerWrapper}>
-          <ActivityIndicator size="large" color="#FFFFFF" />
+          <ActivityIndicator size="large" color={theme.colors.textOnPrimary} />
         </View>
 
         <Text style={styles.title}>{label}</Text>

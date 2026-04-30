@@ -49,9 +49,9 @@ export function SchoolCard({
         </View>
 
         <View style={styles.metaRow}>
-          <View style={styles.productsBadge}>
+          <View style={styles.classesBadge}>
             <Package size={14} color={theme.colors.primary} />
-            <Text style={styles.productsText}>
+            <Text style={styles.classesText}>
               {school.classesCount} turma
               {school.classesCount === 1 ? "" : "s"}
             </Text>

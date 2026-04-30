@@ -1,0 +1,9 @@
+node_modules/
+android/
+ios/
+.expo/
+dist/
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

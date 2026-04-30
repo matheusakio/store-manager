@@ -9,7 +9,7 @@ export function AppScreen({ children }: PropsWithChildren) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <LinearGradient
-        colors={["#F8FAFC", "#F1F5F9"]}
+        colors={[...theme.gradients.background]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0.7, y: 1 }}
         style={styles.gradient}

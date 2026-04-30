@@ -1,24 +1,25 @@
 import { StyleSheet } from "react-native";
+import { theme } from "@/theme";
 
 export const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    borderRadius: 20,
-    padding: 24,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.xl,
+    padding: theme.spacing.xxl,
     alignItems: "center",
-    gap: 12,
-    backgroundColor: "#FFFFFF",
+    gap: theme.spacing.md,
+    backgroundColor: theme.colors.surface,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#0F172A",
+    fontSize: theme.fonts.size.xxl,
+    fontWeight: theme.fonts.weight.bold,
+    color: theme.colors.text,
     textAlign: "center",
   },
   description: {
-    fontSize: 14,
-    color: "#64748B",
+    fontSize: theme.fonts.size.md,
+    color: theme.colors.textSecondary,
     textAlign: "center",
     lineHeight: 20,
   },

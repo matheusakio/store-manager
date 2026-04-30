@@ -1,18 +1,23 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
 
 import { styles } from "./styles";
-import { CLASS_SHIFTS, ClassShift } from "../../types/class.types";
 
-type ShiftFilterValue = "Todos" | ClassShift;
-
-type ShiftFilterProps = {
-  value: ShiftFilterValue;
-  onChange: (value: ShiftFilterValue) => void;
+type ChipOption<T> = {
+  label: string;
+  value: T;
 };
 
-const options: ShiftFilterValue[] = ["Todos", ...CLASS_SHIFTS];
+type ChipFilterProps<T> = {
+  options: ChipOption<T>[];
+  value: T;
+  onChange: (value: T) => void;
+};
 
-export function ShiftFilter({ value, onChange }: ShiftFilterProps) {
+export function ChipFilter<T extends string>({
+  options,
+  value,
+  onChange,
+}: ChipFilterProps<T>) {
   return (
     <ScrollView
       horizontal
@@ -20,19 +25,19 @@ export function ShiftFilter({ value, onChange }: ShiftFilterProps) {
       contentContainerStyle={styles.content}
     >
       {options.map((option) => {
-        const isActive = option === value;
+        const isActive = option.value === value;
 
         return (
           <TouchableOpacity
-            key={option}
+            key={option.value}
             activeOpacity={0.9}
-            onPress={() => onChange(option)}
+            onPress={() => onChange(option.value)}
             style={[styles.chip, isActive ? styles.chipActive : null]}
           >
             <Text
               style={[styles.chipText, isActive ? styles.chipTextActive : null]}
             >
-              {option}
+              {option.label}
             </Text>
           </TouchableOpacity>
         );
