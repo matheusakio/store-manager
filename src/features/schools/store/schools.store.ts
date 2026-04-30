@@ -9,13 +9,11 @@ type SchoolsState = {
   isLoading: boolean;
   error: string | null;
 
-  // Actions
   setSchools: (schools: School[]) => void;
   addSchool: (school: School) => void;
   updateSchool: (id: string, school: School) => void;
   removeSchool: (id: string) => void;
 
-  // Async actions
   fetchSchools: () => Promise<void>;
   createSchool: (input: Omit<School, "id" | "createdAt">) => Promise<School>;
   updateSchoolAsync: (id: string, input: UpdateSchoolInput) => Promise<School>;

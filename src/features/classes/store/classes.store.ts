@@ -9,13 +9,11 @@ type ClassesState = {
   isLoading: boolean;
   error: string | null;
 
-  // Actions
   setClasses: (classes: SchoolClass[]) => void;
   addClass: (cls: SchoolClass) => void;
   updateClass: (id: string, cls: SchoolClass) => void;
   removeClass: (id: string) => void;
 
-  // Async actions
   fetchClasses: (schoolId: string) => Promise<void>;
   fetchAllClasses: () => Promise<void>;
   createClass: (input: Omit<SchoolClass, "id" | "createdAt">) => Promise<SchoolClass>;
@@ -52,7 +50,7 @@ export const useClassesStore = create<ClassesState>()(
         set({ isLoading: true, error: null });
         try {
           const data = await classesRepository.listBySchool(schoolId);
-          // Merge com classes existentes de outras escolas
+        
           const otherClasses = get().classes.filter((c) => c.schoolId !== schoolId);
           set({ classes: [...otherClasses, ...data], isLoading: false });
         } catch {

@@ -1,14 +1,13 @@
 import { renderHook, act, waitFor } from "@testing-library/react-native";
 import { useEntityForm } from "./use-entity-form";
 
-// Mock do router do expo-router
 jest.mock("expo-router", () => ({
   useRouter: () => ({
     replace: jest.fn(),
   }),
 }));
 
-// Mock do app-alert
+
 jest.mock("@/components/feedback/app-alert", () => ({
   showSuccess: jest.fn(),
   showError: jest.fn(),
@@ -78,7 +77,6 @@ describe("useEntityForm", () => {
 
     expect(result.current.isSubmitting).toBe(true);
 
-    // Resolver a promise
     act(() => {
       resolveSubmit?.();
     });
