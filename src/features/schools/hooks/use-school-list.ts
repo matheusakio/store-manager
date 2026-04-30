@@ -1,29 +1,27 @@
 import { useCallback, useMemo } from "react";
 import { useFocusEffect, useRouter } from "expo-router";
 
-import { useAllClasses } from "@/features/classes/hooks/use-all-classes";
+import { useClassesStore } from "@/features/classes/store/classes.store";
 import { useSchoolsUiStore } from "../store/schools-ui.store";
-import { useSchoolActions } from "./use-school-actions";
-import { useSchools } from "./use-schools";
+import { useSchoolsStore } from "../store/schools.store";
 import { mapSchoolsWithClassesCount } from "../utils/school.mappers";
 
 export function useSchoolList() {
   const router = useRouter();
 
   const {
-    schools = [],
+    schools,
     isLoading: isLoadingSchools,
     error,
-    refetch,
-  } = useSchools();
+    fetchSchools,
+    deleteSchoolAsync,
+  } = useSchoolsStore();
 
   const {
-    classes = [],
+    classes,
     isLoading: isLoadingClasses,
-    refetch: refetchClasses,
-  } = useAllClasses();
-
-  const { deleteSchool } = useSchoolActions();
+    fetchAllClasses,
+  } = useClassesStore();
 
   const schoolSearch = useSchoolsUiStore((state) => state.schoolSearch);
   const setSchoolSearch = useSchoolsUiStore((state) => state.setSchoolSearch);
@@ -34,9 +32,9 @@ export function useSchoolList() {
 
   useFocusEffect(
     useCallback(() => {
-      refetch();
-      refetchClasses();
-    }, [refetch, refetchClasses]),
+      fetchSchools();
+      fetchAllClasses();
+    }, [fetchSchools, fetchAllClasses]),
   );
 
   const schoolsWithCount = useMemo(() => {
@@ -63,11 +61,11 @@ export function useSchoolList() {
 
   const handleDeleteSchool = useCallback(
     async (schoolId: string) => {
-      await deleteSchool(schoolId);
-      await refetch();
-      await refetchClasses();
+      await deleteSchoolAsync(schoolId);
+      await fetchSchools();
+      await fetchAllClasses();
     },
-    [deleteSchool, refetch, refetchClasses],
+    [deleteSchoolAsync, fetchSchools, fetchAllClasses],
   );
 
   const handleNavigateToNewSchool = useCallback(() => {
@@ -94,7 +92,7 @@ export function useSchoolList() {
     schools: filteredSchools,
     isLoading,
     error,
-    refetch,
+    refetch: fetchSchools,
     schoolSearch,
     setSchoolSearch,
     schoolListFilter,

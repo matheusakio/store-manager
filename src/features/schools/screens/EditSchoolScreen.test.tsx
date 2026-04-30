@@ -6,24 +6,18 @@ jest.mock("expo-router", () => ({
   useLocalSearchParams: () => ({ schoolId: "1" }),
 }));
 
-jest.mock("@/features/schools/hooks/use-schools", () => ({
-  useSchools: () => ({
+jest.mock("@/features/schools/store/schools.store", () => ({
+  useSchoolsStore: () => ({
     isLoading: false,
     error: null,
     getSchoolById: () => ({
       id: "1",
       name: "School 1",
       address: "Address 1",
-      classesCount: 5,
       createdAt: "2024-01-01",
     }),
-    refetch: jest.fn(),
-  }),
-}));
-
-jest.mock("@/features/schools/hooks/use-school-actions", () => ({
-  useSchoolActions: () => ({
-    updateSchool: jest.fn(),
+    fetchSchools: jest.fn(),
+    updateSchoolAsync: jest.fn(),
   }),
 }));
 

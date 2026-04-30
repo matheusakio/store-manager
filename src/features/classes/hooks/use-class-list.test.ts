@@ -6,27 +6,23 @@ jest.mock("expo-router", () => ({
     push: jest.fn(),
   }),
   useLocalSearchParams: () => ({ schoolId: "school-1" }),
+  useFocusEffect: jest.fn((fn) => fn()),
 }));
 
-jest.mock("./use-classes", () => ({
-  useClasses: () => ({
+jest.mock("@/features/classes/store/classes.store", () => ({
+  useClassesStore: () => ({
     classes: [],
     isLoading: false,
     error: null,
-    refetch: jest.fn(),
+    fetchClasses: jest.fn(),
+    deleteClassAsync: jest.fn(),
   }),
 }));
 
-jest.mock("@/features/schools/hooks/use-schools", () => ({
-  useSchools: () => ({
+jest.mock("@/features/schools/store/schools.store", () => ({
+  useSchoolsStore: () => ({
     getSchoolById: jest.fn(),
     isLoading: false,
-  }),
-}));
-
-jest.mock("./use-class-actions", () => ({
-  useClassActions: () => ({
-    deleteSchoolClass: jest.fn(),
   }),
 }));
 

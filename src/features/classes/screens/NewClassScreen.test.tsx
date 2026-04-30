@@ -6,9 +6,9 @@ jest.mock("expo-router", () => ({
   useLocalSearchParams: () => ({ schoolId: "1" }),
 }));
 
-jest.mock("@/features/classes/hooks/use-class-actions", () => ({
-  useClassActions: () => ({
-    createSchoolClass: jest.fn(),
+jest.mock("@/features/classes/store/classes.store", () => ({
+  useClassesStore: () => ({
+    createClass: jest.fn(),
   }),
 }));
 

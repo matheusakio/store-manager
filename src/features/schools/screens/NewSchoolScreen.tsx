@@ -1,11 +1,11 @@
 import { SchoolForm } from "@/features/schools/components/SchoolForm";
-import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
+import { useSchoolsStore } from "@/features/schools/store/schools.store";
 import { EntityFormScreen } from "@/components/screens/EntityFormScreen";
 import { useEntityForm } from "@/hooks/use-entity-form";
 import type { SchoolFormValues } from "@/lib/validations";
 
 export function NewSchoolScreen() {
-  const { createSchool } = useSchoolActions();
+  const { createSchool } = useSchoolsStore();
 
   const { isSubmitting, handleSubmit } = useEntityForm<SchoolFormValues>({
     onSubmit: async (values) => {

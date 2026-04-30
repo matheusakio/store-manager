@@ -1,32 +1,50 @@
 import { useCallback, useMemo } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 
-import { useSchools } from "@/features/schools/hooks/use-schools";
+import { useSchoolsStore } from "@/features/schools/store/schools.store";
 import { useClassesUiStore } from "../store/classes-ui.store";
-import { useClassActions } from "./use-class-actions";
-import { useClasses } from "./use-classes";
+import { useClassesStore } from "../store/classes.store";
 
 export function useClassList() {
   const router = useRouter();
   const params = useLocalSearchParams<{ schoolId: string }>();
   const schoolId = String(params.schoolId);
 
-  const { classes = [], isLoading, error, refetch } = useClasses(schoolId);
-  const { getSchoolById, isLoading: isLoadingSchool } = useSchools();
-  const { deleteSchoolClass } = useClassActions();
+  const {
+    classes,
+    isLoading: isLoadingClasses,
+    error,
+    fetchClasses,
+    deleteClassAsync,
+  } = useClassesStore();
+
+  const {
+    getSchoolById,
+    isLoading: isLoadingSchool,
+  } = useSchoolsStore();
 
   const classSearch = useClassesUiStore((state) => state.classSearch);
   const selectedShift = useClassesUiStore((state) => state.selectedShift);
   const setClassSearch = useClassesUiStore((state) => state.setClassSearch);
   const setSelectedShift = useClassesUiStore((state) => state.setSelectedShift);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchClasses(schoolId);
+    }, [fetchClasses, schoolId]),
+  );
+
   const school = useMemo(
     () => getSchoolById(schoolId),
     [getSchoolById, schoolId],
   );
 
+  const classesForSchool = useMemo(() => {
+    return classes.filter((c) => c.schoolId === schoolId);
+  }, [classes, schoolId]);
+
   const filteredClasses = useMemo(() => {
-    return classes.filter((item) => {
+    return classesForSchool.filter((item) => {
       const query = classSearch.trim().toLowerCase();
 
       const matchesSearch =
@@ -39,14 +57,14 @@ export function useClassList() {
 
       return matchesSearch && matchesShift;
     });
-  }, [classSearch, classes, selectedShift]);
+  }, [classSearch, classesForSchool, selectedShift]);
 
   const handleDeleteClass = useCallback(
     async (classId: string) => {
-      await deleteSchoolClass(classId);
-      await refetch();
+      await deleteClassAsync(classId);
+      await fetchClasses(schoolId);
     },
-    [deleteSchoolClass, refetch],
+    [deleteClassAsync, fetchClasses, schoolId],
   );
 
   const handleNavigateToNewClass = useCallback(() => {
@@ -60,14 +78,14 @@ export function useClassList() {
     [router, schoolId],
   );
 
-  const isLoadingCombined = isLoading || isLoadingSchool;
+  const isLoadingCombined = isLoadingClasses || isLoadingSchool;
 
   return {
     classes: filteredClasses,
     school,
     isLoading: isLoadingCombined,
     error,
-    refetch,
+    refetch: () => fetchClasses(schoolId),
     classSearch,
     setClassSearch,
     selectedShift,

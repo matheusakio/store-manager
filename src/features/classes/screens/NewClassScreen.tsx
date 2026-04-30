@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 
 import { ClassForm } from "@/features/classes/components/ClassForm";
-import { useClassActions } from "@/features/classes/hooks/use-class-actions";
+import { useClassesStore } from "@/features/classes/store/classes.store";
 import { EntityFormScreen } from "@/components/screens/EntityFormScreen";
 import { useEntityForm } from "@/hooks/use-entity-form";
 import type { ClassFormValues } from "@/lib/validations";
@@ -10,11 +10,11 @@ export function NewClassScreen() {
   const params = useLocalSearchParams<{ schoolId: string }>();
   const schoolId = String(params.schoolId);
 
-  const { createSchoolClass } = useClassActions();
+  const { createClass } = useClassesStore();
 
   const { isSubmitting, handleSubmit } = useEntityForm<ClassFormValues>({
     onSubmit: async (values) => {
-      await createSchoolClass({
+      await createClass({
         schoolId,
         name: values.name,
         shift: values.shift,

@@ -2,8 +2,7 @@ import { useMemo } from "react";
 import { useLocalSearchParams } from "expo-router";
 
 import { SchoolForm } from "@/features/schools/components/SchoolForm";
-import { useSchoolActions } from "@/features/schools/hooks/use-school-actions";
-import { useSchools } from "@/features/schools/hooks/use-schools";
+import { useSchoolsStore } from "@/features/schools/store/schools.store";
 import { EntityFormScreen } from "@/components/screens/EntityFormScreen";
 import { useEntityForm } from "@/hooks/use-entity-form";
 import type { SchoolFormValues } from "@/lib/validations";
@@ -12,8 +11,8 @@ export function EditSchoolScreen() {
   const params = useLocalSearchParams<{ schoolId: string }>();
   const schoolId = String(params.schoolId);
 
-  const { isLoading, error, getSchoolById, refetch } = useSchools();
-  const { updateSchool } = useSchoolActions();
+  const { isLoading, error, getSchoolById, fetchSchools, updateSchoolAsync } =
+    useSchoolsStore();
 
   const school = useMemo(
     () => getSchoolById(schoolId),
@@ -22,14 +21,15 @@ export function EditSchoolScreen() {
 
   const { isSubmitting, handleSubmit } = useEntityForm<SchoolFormValues>({
     onSubmit: async (values) => {
-      await updateSchool(schoolId, values);
+      await updateSchoolAsync(schoolId, values);
     },
     successMessage: "Escola atualizada com sucesso.",
     errorMessage: "Não foi possível atualizar a escola.",
     redirectPath: "/",
   });
 
-  const entityError = error || (!school && !isLoading ? "Escola não encontrada." : null);
+  const entityError =
+    error || (!school && !isLoading ? "Escola não encontrada." : null);
 
   return (
     <EntityFormScreen
@@ -37,7 +37,7 @@ export function EditSchoolScreen() {
       subtitle="Atualize os dados da unidade"
       isLoading={isLoading}
       error={entityError}
-      onRetry={refetch}
+      onRetry={fetchSchools}
     >
       {school && (
         <SchoolForm

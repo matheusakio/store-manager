@@ -1,9 +1,9 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import { NewSchoolScreen } from "./NewSchoolScreen";
 
-jest.mock("@/features/schools/hooks/use-school-actions", () => ({
-  useSchoolActions: () => ({
+jest.mock("@/features/schools/store/schools.store", () => ({
+  useSchoolsStore: () => ({
     createSchool: jest.fn(),
   }),
 }));
