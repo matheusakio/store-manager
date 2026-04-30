@@ -46,10 +46,13 @@ export const storage = {
 
   async clear(): Promise<void> {
     try {
-      await AsyncStorage.multiRemove([
-        STORAGE_KEYS.SCHOOLS,
-        // Note: We'd need to track all class keys to clear them properly
-      ]);
+      const keys = await AsyncStorage.getAllKeys();
+      const appKeys = keys.filter((key) =>
+        key.startsWith("@schools") || key.startsWith("@classes")
+      );
+      for (const key of appKeys) {
+        await AsyncStorage.removeItem(key);
+      }
     } catch (error) {
       console.error("Error clearing storage:", error);
     }

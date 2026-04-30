@@ -68,7 +68,9 @@ type ParameterTypes = Omit<Parameters<typeof createIcon>[0], 'Root'>;
 const accessClassName = (style: any) => {
   const styleObject = Array.isArray(style) ? style[0] : style;
   const keys = Object.keys(styleObject);
-  return styleObject[keys[1]];
+  const key = keys[1];
+  if (key === undefined) return undefined;
+  return styleObject[key];
 };
 
 const createIconUI = ({ ...props }: ParameterTypes) => {
