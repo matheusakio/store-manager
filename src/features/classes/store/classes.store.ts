@@ -71,11 +71,17 @@ export const useClassesStore = create<ClassesState>()(
         set({ isLoading: true, error: null });
         try {
           const data = await classesRepository.listAll();
-          if (data && data.length > 0) {
-            set({ classes: data, isLoading: false });
-          } else {
-            set({ isLoading: false });
-          }
+          const existingClasses = get().classes;
+          const mergedClasses = [...existingClasses];
+          
+          // Add API classes that don't exist in persisted data
+          data.forEach((apiClass) => {
+            if (!existingClasses.find(c => c.id === apiClass.id)) {
+              mergedClasses.push(apiClass);
+            }
+          });
+          
+          set({ classes: mergedClasses, isLoading: false });
         } catch {
           set({ error: "Erro ao carregar turmas", isLoading: false });
         }
