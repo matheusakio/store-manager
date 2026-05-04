@@ -16,8 +16,13 @@ type ClassesState = {
 
   fetchClasses: (schoolId: string) => Promise<void>;
   fetchAllClasses: () => Promise<void>;
-  createClass: (input: Omit<SchoolClass, "id" | "createdAt">) => Promise<SchoolClass>;
-  updateClassAsync: (id: string, input: UpdateClassInput) => Promise<SchoolClass>;
+  createClass: (
+    input: Omit<SchoolClass, "id" | "createdAt">,
+  ) => Promise<SchoolClass>;
+  updateClassAsync: (
+    id: string,
+    input: UpdateClassInput,
+  ) => Promise<SchoolClass>;
   deleteClassAsync: (id: string) => Promise<void>;
 
   getClassesBySchool: (schoolId: string) => SchoolClass[];
@@ -33,8 +38,7 @@ export const useClassesStore = create<ClassesState>()(
 
       setClasses: (classes) => set({ classes }),
 
-      addClass: (cls) =>
-        set((state) => ({ classes: [...state.classes, cls] })),
+      addClass: (cls) => set((state) => ({ classes: [...state.classes, cls] })),
 
       updateClass: (id, cls) =>
         set((state) => ({
@@ -50,9 +54,14 @@ export const useClassesStore = create<ClassesState>()(
         set({ isLoading: true, error: null });
         try {
           const data = await classesRepository.listBySchool(schoolId);
-        
-          const otherClasses = get().classes.filter((c) => c.schoolId !== schoolId);
-          set({ classes: [...otherClasses, ...data], isLoading: false });
+          const otherClasses = get().classes.filter(
+            (c) => c.schoolId !== schoolId,
+          );
+          if (data && data.length > 0) {
+            set({ classes: [...otherClasses, ...data], isLoading: false });
+          } else {
+            set({ isLoading: false });
+          }
         } catch {
           set({ error: "Erro ao carregar turmas", isLoading: false });
         }
@@ -62,7 +71,11 @@ export const useClassesStore = create<ClassesState>()(
         set({ isLoading: true, error: null });
         try {
           const data = await classesRepository.listAll();
-          set({ classes: data, isLoading: false });
+          if (data && data.length > 0) {
+            set({ classes: data, isLoading: false });
+          } else {
+            set({ isLoading: false });
+          }
         } catch {
           set({ error: "Erro ao carregar turmas", isLoading: false });
         }
@@ -97,6 +110,6 @@ export const useClassesStore = create<ClassesState>()(
       name: "classes-storage",
       storage: createJSONStorage(() => storage),
       partialize: (state) => ({ classes: state.classes }),
-    }
-  )
+    },
+  ),
 );

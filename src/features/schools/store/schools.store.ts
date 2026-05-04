@@ -48,7 +48,11 @@ export const useSchoolsStore = create<SchoolsState>()(
         set({ isLoading: true, error: null });
         try {
           const data = await schoolsRepository.list();
-          set({ schools: data, isLoading: false });
+          if (data && data.length > 0) {
+            set({ schools: data, isLoading: false });
+          } else {
+            set({ isLoading: false });
+          }
         } catch {
           set({ error: "Erro ao carregar escolas", isLoading: false });
         }
