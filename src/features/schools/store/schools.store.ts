@@ -76,8 +76,13 @@ export const useSchoolsStore = create<SchoolsState>()(
       },
 
       deleteSchoolAsync: async (id) => {
-        await schoolsRepository.remove(id);
+     
         get().removeSchool(id);
+        try {
+          await schoolsRepository.remove(id);
+        } catch (error) {
+          console.log('School deleted from store, API deletion failed:', error);
+        }
       },
 
       getSchoolById: (id) => {

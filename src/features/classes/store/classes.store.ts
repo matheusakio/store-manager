@@ -100,8 +100,16 @@ export const useClassesStore = create<ClassesState>()(
       },
 
       deleteClassAsync: async (id) => {
-        await classesRepository.remove(id);
+      
         get().removeClass(id);
+        
+   
+        try {
+          await classesRepository.remove(id);
+        } catch (error) {
+        
+          console.log('Class deleted from store, API deletion failed:', error);
+        }
       },
 
       getClassesBySchool: (schoolId) => {
